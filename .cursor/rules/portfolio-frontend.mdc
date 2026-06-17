@@ -1,0 +1,59 @@
+---
+description: Portfolio frontend architecture and coding rules
+alwaysApply: true
+---
+
+You are working on Kaviyashre Ragupathy's production-grade personal portfolio website.
+
+Tech stack:
+- Next.js App Router
+- React
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- lucide-react
+- Vercel deployment
+
+Product goal:
+Build a premium, responsive, accessible, SEO-ready portfolio for a software engineer moving toward AI, full-stack, and product-minded engineering roles.
+
+Design direction:
+- Soft pink/light theme: warm off-white, blush pink, lilac, airy aesthetic
+- Dark space theme: navy/black, subtle particles, neon purple/blue accents
+- Elegant, modern, polished, product-like
+- Avoid generic template-looking UI
+
+Coding rules:
+- Use TypeScript strictly.
+- Do not use `any`.
+- Use semantic HTML.
+- Use accessible labels for interactive elements.
+- Use mobile-first responsive design.
+- Use reusable components.
+- Use clean folder structure.
+- Keep components small and focused.
+- Prefer server components by default.
+- Use client components only when state, browser APIs, or animation require it.
+- Use Tailwind utility classes.
+- Avoid inline styles unless absolutely necessary.
+- Avoid hardcoded repeated content; move content to typed data files when useful.
+- Optimize for performance and SEO.
+- Do not add unnecessary libraries.
+- Do not generate huge files.
+
+Folder preferences:
+- app/ for routes
+- components/layout for navbar, footer, theme shell
+- components/sections for page sections
+- components/ui for reusable primitives
+- components/effects for visual backgrounds
+- content/ for typed portfolio data
+- lib/ for constants and helpers
+- types/ for shared TypeScript types
+
+When making changes:
+1. Briefly explain the intended change.
+2. Modify only relevant files.
+3. Keep existing design direction intact.
+4. Mention any test checklist.
+5. Suggest a Git commit message.

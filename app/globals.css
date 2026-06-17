@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+/* ─── Soft Pink Theme (default / light) ──────────────────────────────────────
+   Warm off-white backgrounds, blush rose accents, lilac highlights.
+   Feeling: airy, friendly, creative, personal.
+─────────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --background:       #fdf8f6;
+  --background-subtle:#f9f0ed;
+  --surface:          #ffffff;
+  --surface-raised:   #fef6f3;
+
+  /* Borders */
+  --border:           #f0e0da;
+  --border-subtle:    #f7ebe7;
+
+  /* Text */
+  --foreground:       #1a1014;
+  --foreground-secondary: #6b4f5a;
+  --muted-foreground: #9b7a85;
+
+  /* Accent — blush rose */
+  --accent:           #e8637a;
+  --accent-foreground:#ffffff;
+  --accent-soft:      #f4a8b5;
+  --accent-muted:     #f9d4db;
+
+  /* Secondary — lilac / lavender */
+  --secondary:        #c4a8d4;
+  --secondary-muted:  #e8e0f0;
+
+  /* Focus ring */
+  --ring:             #e8637a;
+}
+
+/* ─── Space Theme (dark) ─────────────────────────────────────────────────────
+   Deep navy / space-black backgrounds, neon purple & electric blue accents.
+   Feeling: futuristic, technical, innovative.
+─────────────────────────────────────────────────────────────────────────────── */
+.dark {
+  /* Backgrounds */
+  --background:       #080b14;
+  --background-subtle:#0d1120;
+  --surface:          #111827;
+  --surface-raised:   #1a2234;
+
+  /* Borders */
+  --border:           #1e2d47;
+  --border-subtle:    #162035;
+
+  /* Text */
+  --foreground:       #f0f4ff;
+  --foreground-secondary: #94a3b8;
+  --muted-foreground: #64748b;
+
+  /* Accent — neon purple */
+  --accent:           #a855f7;
+  --accent-foreground:#ffffff;
+  --accent-soft:      #c084fc;
+  --accent-muted:     #2d1b69;
+
+  /* Secondary — electric blue-violet */
+  --secondary:        #818cf8;
+  --secondary-muted:  #1e1b4b;
+
+  /* Focus ring */
+  --ring:             #a855f7;
+}
+
+/* ─── Tailwind v4 Design Tokens ──────────────────────────────────────────────
+   @theme inline maps CSS custom properties to Tailwind utility classes at
+   runtime so theme switching works without rebuilding styles.
+
+   Generated utilities (examples):
+   bg-background, bg-surface, bg-accent, bg-accent-muted
+   text-foreground, text-muted-foreground, text-accent
+   border-border, border-border-subtle
+   ring-ring
+─────────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Backgrounds */
+  --color-background:        var(--background);
+  --color-background-subtle: var(--background-subtle);
+  --color-surface:           var(--surface);
+  --color-surface-raised:    var(--surface-raised);
+
+  /* Borders */
+  --color-border:            var(--border);
+  --color-border-subtle:     var(--border-subtle);
+
+  /* Text */
+  --color-foreground:          var(--foreground);
+  --color-foreground-secondary:var(--foreground-secondary);
+  --color-muted-foreground:    var(--muted-foreground);
+
+  /* Accent */
+  --color-accent:            var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft:       var(--accent-soft);
+  --color-accent-muted:      var(--accent-muted);
+
+  /* Secondary */
+  --color-secondary:         var(--secondary);
+  --color-secondary-muted:   var(--secondary-muted);
+
+  /* Ring */
+  --color-ring:              var(--ring);
+}
+
+/* ─── Base styles ─────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Consistent focus ring using the accent ring token */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Remove default list styles when used as navigation */
+nav ul,
+nav ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
