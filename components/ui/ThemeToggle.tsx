@@ -1,9 +1,13 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+/* Hydration guard — returns true only on the client, false during SSR */
+const subscribe = () => () => {};
+const mounted = useSyncExternalStore.bind(null, subscribe, () => true, () => false);
 
 interface ThemeToggleProps {
   className?: string;
@@ -11,11 +15,9 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const isMounted = mounted();
 
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) {
+  if (!isMounted) {
     return (
       <div
         className={cn(

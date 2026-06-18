@@ -1,10 +1,10 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { HeroSection } from '@/components/sections/HeroSection';
+import { AboutSection } from '@/components/sections/AboutSection';
 
 /*
- * Phase 1: Hero only.
+ * Phase 2: About Section added.
  * Future sections are imported here as they are built:
- *   import { AboutSection }      from '@/components/sections/AboutSection';
  *   import { ExperienceSection } from '@/components/sections/ExperienceSection';
  *   import { ProjectsSection }   from '@/components/sections/ProjectsSection';
  *   import { ContactSection }    from '@/components/sections/ContactSection';
@@ -16,7 +16,7 @@ export default function HomePage() {
       <Navbar />
       <main>
         <HeroSection />
-        {/* <AboutSection />      — Phase 2 */}
+        <AboutSection />
         {/* <ExperienceSection /> — Phase 3 */}
         {/* <ProjectsSection />   — Phase 4 */}
         {/* <ContactSection />    — Phase 5 */}

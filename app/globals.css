@@ -146,3 +146,21 @@ nav ol {
   margin: 0;
   padding: 0;
 }
+
+/* ─── Cursor blink (terminal prompt) ─────────────────────────────────────── */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 1.2s step-start infinite;
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
