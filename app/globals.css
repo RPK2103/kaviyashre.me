@@ -1,115 +1,173 @@
 @import "tailwindcss";
 
-/* ─── Soft Pink Theme (default / light) ──────────────────────────────────────
-   Warm off-white backgrounds, blush rose accents, lilac highlights.
-   Feeling: airy, friendly, creative, personal.
+/* ─── Soft Theme (default / light) ───────────────────────────────────────────
+   Warm off-white base, mauve primary, blush + lilac accents.
+   Personality: Sophisticated Technicality · Minimalist-Tactile · Premium.
+   Inspired by DESIGN (1).md — Hanken Grotesk, tight borders, tonal layers.
 ─────────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* Backgrounds */
-  --background:       #fdf8f6;
-  --background-subtle:#f9f0ed;
-  --surface:          #ffffff;
-  --surface-raised:   #fef6f3;
+  /* ── Backgrounds / Surfaces ── */
+  --background:            #fff8f5;
+  --background-subtle:     #fbf2ed;
+  --surface:               #ffffff;
+  --surface-raised:        #fbf2ed;
+  --surface-variant:       #e9e1dc;
 
-  /* Borders */
-  --border:           #f0e0da;
-  --border-subtle:    #f7ebe7;
+  /* ── Borders ── */
+  --border:                #d2c3c7;
+  --border-subtle:         #e9e1dc;
 
-  /* Text */
-  --foreground:       #1a1014;
-  --foreground-secondary: #6b4f5a;
-  --muted-foreground: #9b7a85;
+  /* ── Text ── */
+  --foreground:            #1e1b18;
+  --foreground-secondary:  #4f4448;
+  --muted-foreground:      #817478;
 
-  /* Accent — blush rose */
-  --accent:           #e8637a;
-  --accent-foreground:#ffffff;
-  --accent-soft:      #f4a8b5;
-  --accent-muted:     #f9d4db;
+  /* ── Primary — mauve ── */
+  --primary:               #795465;
+  --primary-foreground:    #ffffff;
+  --primary-muted:         #f8c8dc;
 
-  /* Secondary — lilac / lavender */
-  --secondary:        #c4a8d4;
-  --secondary-muted:  #e8e0f0;
+  /* ── Accent — blush rose ── */
+  --accent:                #795465;
+  --accent-foreground:     #ffffff;
+  --accent-soft:           #f8c8dc;
+  --accent-muted:          #fce8f0;
 
-  /* Focus ring */
-  --ring:             #e8637a;
+  /* ── Secondary — lilac ── */
+  --secondary:             #e1e1f5;
+  --secondary-foreground:  #5c5d6e;
+  --secondary-muted:       #f0f0fa;
+
+  /* ── Glow tokens (minimal in soft theme) ── */
+  --glow-primary:          rgba(121, 84, 101, 0.10);
+  --glow-secondary:        rgba(225, 225, 245, 0.25);
+  --glow-cyan:             transparent;
+
+  /* ── Shadow — Linear-style, barely visible ── */
+  --shadow-sm:             0 1px 2px rgba(30, 27, 24, 0.04);
+  --shadow-md:             0 4px 16px rgba(30, 27, 24, 0.06), 0 1px 4px rgba(30, 27, 24, 0.04);
+  --shadow-lg:             0 8px 32px rgba(30, 27, 24, 0.08), 0 2px 8px rgba(30, 27, 24, 0.04);
+
+  /* ── Focus ring ── */
+  --ring:                  #795465;
 }
 
 /* ─── Space Theme (dark) ─────────────────────────────────────────────────────
-   Deep navy / space-black backgrounds, neon purple & electric blue accents.
-   Feeling: futuristic, technical, innovative.
+   Deep navy/black base, violet primary, electric blue + cyan AI glow.
+   Personality: Anthropic + Linear + Vercel. Not cyberpunk.
 ─────────────────────────────────────────────────────────────────────────────── */
 .dark {
-  /* Backgrounds */
-  --background:       #080b14;
-  --background-subtle:#0d1120;
-  --surface:          #111827;
-  --surface-raised:   #1a2234;
+  /* ── Backgrounds / Surfaces ── */
+  --background:            #050816;
+  --background-subtle:     #0c1120;
+  --surface:               #111827;
+  --surface-raised:        #111827;
+  --surface-variant:       #1a2234;
 
-  /* Borders */
-  --border:           #1e2d47;
-  --border-subtle:    #162035;
+  /* ── Borders ── */
+  --border:                rgba(255, 255, 255, 0.10);
+  --border-subtle:         rgba(255, 255, 255, 0.06);
 
-  /* Text */
-  --foreground:       #f0f4ff;
-  --foreground-secondary: #94a3b8;
-  --muted-foreground: #64748b;
+  /* ── Text ── */
+  --foreground:            #f8fafc;
+  --foreground-secondary:  #a1a1aa;
+  --muted-foreground:      #71717a;
 
-  /* Accent — neon purple */
-  --accent:           #a855f7;
-  --accent-foreground:#ffffff;
-  --accent-soft:      #c084fc;
-  --accent-muted:     #2d1b69;
+  /* ── Primary — violet ── */
+  --primary:               #8b5cf6;
+  --primary-foreground:    #ffffff;
+  --primary-muted:         rgba(139, 92, 246, 0.15);
 
-  /* Secondary — electric blue-violet */
-  --secondary:        #818cf8;
-  --secondary-muted:  #1e1b4b;
+  /* ── Accent — violet ── */
+  --accent:                #8b5cf6;
+  --accent-foreground:     #ffffff;
+  --accent-soft:           #a78bfa;
+  --accent-muted:          rgba(139, 92, 246, 0.15);
 
-  /* Focus ring */
-  --ring:             #a855f7;
+  /* ── Secondary — electric blue ── */
+  --secondary:             #60a5fa;
+  --secondary-foreground:  #ffffff;
+  --secondary-muted:       rgba(96, 165, 250, 0.12);
+
+  /* ── Glow tokens — AI graph + capability map ── */
+  --glow-primary:          rgba(139, 92, 246, 0.25);
+  --glow-secondary:        rgba(96, 165, 250, 0.20);
+  --glow-cyan:             rgba(34, 211, 238, 0.20);
+  --glow-cyan-strong:      rgba(34, 211, 238, 0.40);
+
+  /* ── Cyan — for neural graph / skill nodes ── */
+  --cyan:                  #22d3ee;
+  --cyan-muted:            rgba(34, 211, 238, 0.15);
+
+  /* ── Shadow — subtle depth layers ── */
+  --shadow-sm:             0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-md:             0 4px 16px rgba(0, 0, 0, 0.40), 0 1px 4px rgba(0, 0, 0, 0.20);
+  --shadow-lg:             0 8px 32px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.30);
+
+  /* ── Focus ring ── */
+  --ring:                  #8b5cf6;
 }
 
 /* ─── Tailwind v4 Design Tokens ──────────────────────────────────────────────
    @theme inline maps CSS custom properties to Tailwind utility classes at
    runtime so theme switching works without rebuilding styles.
-
-   Generated utilities (examples):
-   bg-background, bg-surface, bg-accent, bg-accent-muted
-   text-foreground, text-muted-foreground, text-accent
-   border-border, border-border-subtle
-   ring-ring
 ─────────────────────────────────────────────────────────────────────────────── */
 @theme inline {
-  /* Fonts */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Fonts ── */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 
-  /* Backgrounds */
-  --color-background:        var(--background);
-  --color-background-subtle: var(--background-subtle);
-  --color-surface:           var(--surface);
-  --color-surface-raised:    var(--surface-raised);
+  /* ── Backgrounds ── */
+  --color-background:          var(--background);
+  --color-background-subtle:   var(--background-subtle);
+  --color-surface:             var(--surface);
+  --color-surface-raised:      var(--surface-raised);
+  --color-surface-variant:     var(--surface-variant);
 
-  /* Borders */
-  --color-border:            var(--border);
-  --color-border-subtle:     var(--border-subtle);
+  /* ── Borders ── */
+  --color-border:              var(--border);
+  --color-border-subtle:       var(--border-subtle);
 
-  /* Text */
-  --color-foreground:          var(--foreground);
-  --color-foreground-secondary:var(--foreground-secondary);
-  --color-muted-foreground:    var(--muted-foreground);
+  /* ── Text ── */
+  --color-foreground:           var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-muted-foreground:     var(--muted-foreground);
 
-  /* Accent */
-  --color-accent:            var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent-soft:       var(--accent-soft);
-  --color-accent-muted:      var(--accent-muted);
+  /* ── Primary ── */
+  --color-primary:             var(--primary);
+  --color-primary-foreground:  var(--primary-foreground);
+  --color-primary-muted:       var(--primary-muted);
 
-  /* Secondary */
-  --color-secondary:         var(--secondary);
-  --color-secondary-muted:   var(--secondary-muted);
+  /* ── Accent ── */
+  --color-accent:              var(--accent);
+  --color-accent-foreground:   var(--accent-foreground);
+  --color-accent-soft:         var(--accent-soft);
+  --color-accent-muted:        var(--accent-muted);
 
-  /* Ring */
-  --color-ring:              var(--ring);
+  /* ── Secondary ── */
+  --color-secondary:           var(--secondary);
+  --color-secondary-foreground:var(--secondary-foreground);
+  --color-secondary-muted:     var(--secondary-muted);
+
+  /* ── Glow ── */
+  --color-glow-primary:        var(--glow-primary);
+  --color-glow-secondary:      var(--glow-secondary);
+  --color-glow-cyan:           var(--glow-cyan);
+
+  /* ── Cyan (dark theme graph accents) ── */
+  --color-cyan:                var(--cyan, #22d3ee);
+  --color-cyan-muted:          var(--cyan-muted, transparent);
+
+  /* ── Ring ── */
+  --color-ring:                var(--ring);
+
+  /* ── Border radius scale (DESIGN (1).md — Soft-Technical) ── */
+  --radius-sm:                 0.125rem;
+  --radius:                    0.25rem;
+  --radius-md:                 0.375rem;
+  --radius-lg:                 0.5rem;
+  --radius-xl:                 0.75rem;
+  --radius-full:               9999px;
 }
 
 /* ─── Base styles ─────────────────────────────────────────────────────────── */
@@ -127,19 +185,76 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Consistent focus ring using the accent ring token */
+/* ─── Typography scale (DESIGN (1).md) ───────────────────────────────────── */
+.font-display {
+  font-family: var(--font-sans), 'Hanken Grotesk', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+.font-code,
+code,
+kbd,
+pre {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Code-style chips, OS labels, metadata */
+.label-mono {
+  font-family: var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.8125rem;  /* 13px */
+  line-height: 1;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+/* ─── Elevation / Depth ──────────────────────────────────────────────────── */
+.shadow-card {
+  box-shadow: var(--shadow-sm);
+}
+.shadow-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.shadow-modal {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ─── Glow utilities (primarily dark theme) ──────────────────────────────── */
+.glow-primary {
+  box-shadow: 0 0 24px var(--glow-primary);
+}
+.glow-secondary {
+  box-shadow: 0 0 24px var(--glow-secondary);
+}
+.glow-cyan {
+  box-shadow: 0 0 24px var(--glow-cyan);
+}
+.glow-cyan-strong {
+  box-shadow: 0 0 40px var(--glow-cyan, transparent), 0 0 80px var(--glow-primary);
+}
+
+/* ─── Thin border (Technical OS look per DESIGN (1).md) ──────────────────── */
+.border-technical {
+  border: 1px solid var(--border);
+}
+.border-technical-subtle {
+  border: 0.5px solid var(--border-subtle);
+}
+
+/* ─── Consistent focus ring ──────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 
-/* Remove default list styles when used as navigation */
+/* ─── Nav / list resets ──────────────────────────────────────────────────── */
 nav ul,
 nav ol {
   list-style: none;
@@ -147,7 +262,7 @@ nav ol {
   padding: 0;
 }
 
-/* ─── Cursor blink (terminal prompt) ─────────────────────────────────────── */
+/* ─── Animations ─────────────────────────────────────────────────────────── */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
@@ -157,7 +272,7 @@ nav ol {
   animation: cursor-blink 1.2s step-start infinite;
 }
 
-/* Hide scrollbar while keeping scroll functionality */
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 .scrollbar-none {
   scrollbar-width: none;
 }
