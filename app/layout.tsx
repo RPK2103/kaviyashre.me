@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import {
@@ -10,22 +10,24 @@ import {
   OG_IMAGE,
 } from '@/lib/constants';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const hankenGrotesk = Hanken_Grotesk({
+  variable: '--font-sans',
   subsets: ['latin'],
   display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
   subsets: ['latin'],
   display: 'swap',
+  weight: ['400', '500'],
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fdf8f6' },
-    { media: '(prefers-color-scheme: dark)', color: '#080b14' },
+    { media: '(prefers-color-scheme: light)', color: '#fff8f5' },
+    { media: '(prefers-color-scheme: dark)', color: '#050816' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -97,9 +99,9 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      className={`${hankenGrotesk.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-full bg-background text-foreground antialiased">
+      <body className="min-h-full bg-background text-foreground font-sans antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
