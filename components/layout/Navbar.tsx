@@ -39,13 +39,7 @@ export function Navbar() {
         className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-5 sm:px-8 lg:px-12"
       >
         {/* Logo */}
-        <Link
-          href="/"
-          aria-label="Kaviyashre — Home"
-          className="flex-shrink-0 text-foreground transition-opacity hover:opacity-80"
-        >
-          <BrandLogo size={34} />
-        </Link>
+        <BrandLogo />
 
         {/* Desktop nav */}
         <ul className="hidden md:flex items-center gap-0.5">

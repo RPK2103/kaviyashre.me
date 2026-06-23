@@ -15,6 +15,7 @@ const NAVBAR_H = '4rem';
 export function HeroSection() {
   return (
     <section
+      id="home"
       aria-label="Hero"
       style={{ minHeight: `calc(100vh - ${NAVBAR_H})` }}
       className="relative mt-16 flex items-center overflow-hidden"
