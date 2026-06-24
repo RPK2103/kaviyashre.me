@@ -279,3 +279,37 @@ nav ol {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* ─── Experience timeline line ───────────────────────────────────────────── */
+
+/* Soft theme: muted mauve line */
+.timeline-line {
+  background: var(--border);
+}
+
+/* Space theme: subtle violet → blue → cyan gradient */
+.dark .timeline-line {
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 92, 246, 0.45),
+    rgba(96, 165, 250, 0.38),
+    rgba(34, 211, 238, 0.30)
+  );
+}
+
+/* Active/hover overlay: brighter primary line */
+.timeline-line-active {
+  background: var(--primary);
+  filter: blur(0.5px);
+}
+
+.dark .timeline-line-active {
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 92, 246, 0.85),
+    rgba(96, 165, 250, 0.70),
+    rgba(34, 211, 238, 0.55)
+  );
+  filter: blur(0.5px);
+  box-shadow: 0 0 6px 1px rgba(139, 92, 246, 0.25);
+}
