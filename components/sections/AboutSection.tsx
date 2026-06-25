@@ -13,7 +13,7 @@ export function AboutSection() {
   const [activeTab, setActiveTab] = useState<AboutTabId>('whoami');
 
   return (
-    <section id="about" aria-label="About Kaviyashre">
+    <section id="about" aria-label="About Kaviyashre" className="scroll-mt-20">
       <Container className="py-20 lg:py-28">
 
         {/* ── Section header ──────────────────────────────────────────── */}

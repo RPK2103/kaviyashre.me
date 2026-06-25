@@ -4,6 +4,7 @@ import { AboutSection } from '@/components/sections/AboutSection';
 import { CapabilityGraphSection } from '@/components/sections/CapabilityGraphSection';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { BeyondSection } from '@/components/sections/BeyondSection';
+import { ProjectsSection } from '@/components/sections/ProjectsSection';
 
 export default function HomePage() {
   return (
@@ -15,7 +16,7 @@ export default function HomePage() {
         <CapabilityGraphSection />
         <ExperienceSection />
         <BeyondSection />
-        {/* <ProjectsSection /> — Phase 6 */}
+        <ProjectsSection />
         {/* <ContactSection />  — Phase 7 */}
       </main>
     </>

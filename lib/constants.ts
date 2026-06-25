@@ -12,7 +12,7 @@ export const SOCIAL_LINKS = {
 } as const;
 
 export const NAV_ITEMS = [
-  { label: 'About',      href: '/#about',      comingSoon: true  },
+  { label: 'About',      href: '/#about',      comingSoon: false },
   { label: 'Experience', href: '/#experience', comingSoon: false },
   { label: 'Projects',   href: '/#projects',   comingSoon: true  },
   { label: 'Contact',    href: '/#contact',    comingSoon: true  },
