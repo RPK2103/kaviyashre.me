@@ -18,7 +18,7 @@ export function HeroSection() {
       id="home"
       aria-label="Hero"
       style={{ minHeight: `calc(100vh - ${NAVBAR_H})` }}
-      className="relative mt-16 flex items-center overflow-hidden"
+      className="relative mt-16 flex scroll-mt-20 items-center overflow-hidden"
     >
       {/* Ambient radial gradient */}
       <div

@@ -508,7 +508,7 @@ export function ExperienceSection() {
     <section
       id="experience"
       aria-labelledby="experience-heading"
-      className="relative py-24 bg-[var(--background)]"
+      className="relative scroll-mt-20 py-24 bg-[var(--background)]"
     >
       <div className="absolute inset-x-0 top-0 h-px bg-[var(--border-subtle)]" aria-hidden="true" />
 

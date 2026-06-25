@@ -48,7 +48,7 @@ export function ProjectsSection() {
       <section
         id="projects"
         aria-labelledby="projects-heading"
-        className="relative overflow-x-hidden bg-[var(--background)]"
+        className="relative scroll-mt-20 overflow-x-hidden bg-[var(--background)]"
       >
         {/* Top rule — matches ExperienceSection pattern */}
         <div

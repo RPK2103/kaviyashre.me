@@ -11,7 +11,7 @@ export const profile = {
     'I build AI-powered systems, backend platforms, and cloud-native products with strong engineering depth and product thinking.',
   location: 'United Kingdom',
   email: 'hello@kaviyashre.me',
-  resumeUrl: '/resume.pdf',
+  resumeUrl: '/documents/Kaviyashre_RP_Resume.pdf',
   projectsHref: '/#projects',
   imageUrl: '/images/profile.jpg',
 } as const;

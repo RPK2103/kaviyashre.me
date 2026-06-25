@@ -103,7 +103,7 @@ export function FieldNotesSection() {
       <section
         id="field-notes"
         aria-labelledby="field-notes-heading"
-        className="relative overflow-x-hidden bg-[var(--background-subtle)]"
+        className="relative scroll-mt-20 overflow-x-hidden bg-[var(--background-subtle)]"
       >
         {/* Top rule */}
         <div

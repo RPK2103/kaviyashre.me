@@ -34,7 +34,7 @@ export function BeyondSection() {
     <section
       id="beyond"
       aria-label="Beyond 9-5"
-      className="overflow-x-hidden bg-background"
+      className="scroll-mt-20 overflow-x-hidden bg-background"
     >
       {/* ── Section header ── */}
       <Container className="pt-20 pb-10 lg:pt-28 lg:pb-14">

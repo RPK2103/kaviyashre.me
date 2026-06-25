@@ -6,6 +6,8 @@ import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { BeyondSection } from '@/components/sections/BeyondSection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { FieldNotesSection } from '@/components/sections/FieldNotesSection';
+import { ContactSection } from '@/components/sections/ContactSection';
+import { Footer } from '@/components/layout/Footer';
 
 export default function HomePage() {
   return (
@@ -19,8 +21,9 @@ export default function HomePage() {
         <BeyondSection />
         <ProjectsSection />
         <FieldNotesSection />
-        {/* <ContactSection />  — Phase 8 */}
+        <ContactSection />
       </main>
+      <Footer />
     </>
   );
 }

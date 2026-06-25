@@ -1,16 +1,43 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { BrandLogo } from '@/components/ui/BrandLogo';
-import { NAV_ITEMS } from '@/lib/constants';
+import { NAV_ITEMS, NAV_SECTION_IDS } from '@/lib/constants';
+import { useActiveSection, sectionIdFromHref } from '@/lib/useActiveSection';
+
+// ─── Shared nav link styles ───────────────────────────────────────────────────
+
+function navLinkClass(isActive: boolean, variant: 'desktop' | 'mobile') {
+  return cn(
+    'text-sm font-medium transition-colors duration-200',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring',
+    variant === 'desktop' && [
+      'relative px-3.5 py-2 rounded-full',
+      isActive
+        ? 'text-primary'
+        : 'text-foreground-secondary hover:text-foreground',
+      isActive &&
+        'after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:bg-primary',
+    ],
+    variant === 'mobile' && [
+      'block px-6 py-3',
+      isActive
+        ? 'border-l-2 border-primary bg-accent-muted/40 text-primary pl-[22px]'
+        : 'text-foreground-secondary hover:bg-border-subtle hover:text-foreground',
+    ],
+  );
+}
+
+// ─── Navbar ───────────────────────────────────────────────────────────────────
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const activeSection = useActiveSection(NAV_SECTION_IDS);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -21,8 +48,12 @@ export function Navbar() {
   useEffect(() => {
     if (mobileOpen) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [mobileOpen]);
+
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
 
   return (
     <header
@@ -42,43 +73,45 @@ export function Navbar() {
         <BrandLogo />
 
         {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-0.5">
-          {NAV_ITEMS.map((item) =>
-            item.comingSoon ? (
-              <li key={item.href}>
-                <span
-                  aria-label={`${item.label} — coming soon`}
-                  title="Coming soon"
-                  className="px-3.5 py-2 rounded-full text-sm font-medium text-foreground/30 cursor-default select-none"
-                >
-                  {item.label}
-                </span>
-              </li>
-            ) : (
+        <ul className="hidden items-center gap-0.5 md:flex">
+          {NAV_ITEMS.map((item) => {
+            const sectionId = sectionIdFromHref(item.href);
+            const isActive = activeSection === sectionId;
+
+            if (item.comingSoon) {
+              return (
+                <li key={item.href}>
+                  <span
+                    aria-label={`${item.label} — coming soon`}
+                    title="Coming soon"
+                    className="cursor-default select-none rounded-full px-3.5 py-2 text-sm font-medium text-foreground/30"
+                  >
+                    {item.label}
+                  </span>
+                </li>
+              );
+            }
+
+            return (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={cn(
-                    'px-3.5 py-2 rounded-full text-sm font-medium',
-                    'text-foreground-secondary hover:text-foreground',
-                    'transition-colors duration-200',
-                    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring',
-                  )}
+                  aria-current={isActive ? 'true' : undefined}
+                  className={navLinkClass(isActive, 'desktop')}
                 >
                   {item.label}
                 </Link>
               </li>
-            ),
-          )}
+            );
+          })}
         </ul>
 
         {/* Right controls */}
         <div className="flex items-center gap-1">
           <ThemeToggle />
-          {/* Mobile hamburger */}
           <button
             className={cn(
-              'md:hidden flex h-9 w-9 items-center justify-center rounded-full',
+              'flex h-9 w-9 items-center justify-center rounded-full md:hidden',
               'text-foreground-secondary hover:text-foreground',
               'hover:bg-border-subtle transition-colors duration-200',
               'focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring',
@@ -102,37 +135,41 @@ export function Navbar() {
         <div
           id="mobile-menu"
           className={cn(
-            'md:hidden border-t border-border-subtle',
+            'border-t border-border-subtle md:hidden',
             'bg-background/95 backdrop-blur-md',
           )}
         >
           <ul className="flex flex-col py-2">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.href}>
-                {item.comingSoon ? (
-                  <span
-                    className="flex items-center justify-between px-6 py-3 text-sm font-medium text-muted-foreground/50 cursor-default select-none"
-                  >
-                    {item.label}
-                    <span className="text-[10px] tracking-wide uppercase text-muted-foreground/40">
-                      Soon
+            {NAV_ITEMS.map((item) => {
+              const sectionId = sectionIdFromHref(item.href);
+              const isActive = activeSection === sectionId;
+
+              if (item.comingSoon) {
+                return (
+                  <li key={item.href}>
+                    <span className="flex cursor-default select-none items-center justify-between px-6 py-3 text-sm font-medium text-muted-foreground/50">
+                      {item.label}
+                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground/40">
+                        Soon
+                      </span>
                     </span>
-                  </span>
-                ) : (
+                  </li>
+                );
+              }
+
+              return (
+                <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={cn(
-                      'block px-6 py-3 text-sm font-medium',
-                      'text-foreground-secondary hover:text-foreground',
-                      'hover:bg-border-subtle transition-colors duration-150',
-                    )}
+                    aria-current={isActive ? 'true' : undefined}
+                    onClick={closeMobile}
+                    className={navLinkClass(isActive, 'mobile')}
                   >
                     {item.label}
                   </Link>
-                )}
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

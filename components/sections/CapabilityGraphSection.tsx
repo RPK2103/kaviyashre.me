@@ -27,9 +27,9 @@ export function CapabilityGraphSection() {
 
   return (
     <section
-      id="capabilities"
+      id="skills"
       aria-label="Engineering Capabilities"
-      className="relative overflow-hidden"
+      className="relative overflow-hidden scroll-mt-20"
     >
       {/* Subtle radial tint matching the soft/dark theme accent */}
       <div
