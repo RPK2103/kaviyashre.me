@@ -3,18 +3,20 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { AboutSidebar } from '@/components/about/AboutSidebar';
 import { AboutPanel } from '@/components/about/AboutPanel';
 import { cn } from '@/lib/utils';
-import { fadeInUp } from '@/lib/animations';
+import { fadeInUp, SECTION_VIEWPORT } from '@/lib/animations';
+import { SECTION_PY } from '@/lib/constants';
 import { type AboutTabId } from '@/data/about';
 
 export function AboutSection() {
   const [activeTab, setActiveTab] = useState<AboutTabId>('whoami');
 
   return (
-    <section id="about" aria-label="About Kaviyashre" className="scroll-mt-20">
-      <Container className="py-20 lg:py-28">
+    <section id="about" aria-labelledby="about-heading" className="scroll-mt-20">
+      <Container className={cn(SECTION_PY)}>
 
         {/* ── Section header ──────────────────────────────────────────── */}
         <motion.div
@@ -22,14 +24,13 @@ export function AboutSection() {
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={SECTION_VIEWPORT}
         >
-          <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-            About
-          </p>
-          <h2 className="text-2xl font-bold tracking-[-0.02em] text-foreground sm:text-3xl">
-            The Operating System
-          </h2>
+          <SectionHeader
+            eyebrow="About"
+            title="The Operating System"
+            headingId="about-heading"
+          />
         </motion.div>
 
         {/* ── Floating Mac-style window ────────────────────────────────── */}

@@ -27,4 +27,10 @@ export const NAV_SECTION_IDS = NAV_ITEMS.filter((item) => !item.comingSoon).map(
   (item) => item.href.replace('/#', ''),
 );
 
+/** Shared vertical rhythm for major homepage sections */
+export const SECTION_PT = 'pt-20 lg:pt-28' as const;
+export const SECTION_PB = 'pb-20 lg:pb-28' as const;
+export const SECTION_PY = 'py-20 lg:py-28' as const;
+
+// TODO: Add OG image at public/og-image.png before launch
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;

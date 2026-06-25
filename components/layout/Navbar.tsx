@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { BrandLogo } from '@/components/ui/BrandLogo';
@@ -21,10 +22,10 @@ function navLinkClass(isActive: boolean, variant: 'desktop' | 'mobile') {
         ? 'text-primary'
         : 'text-foreground-secondary hover:text-foreground',
       isActive &&
-        'after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:bg-primary',
+        'after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:bg-primary after:transition-all after:duration-200',
     ],
     variant === 'mobile' && [
-      'block px-6 py-3',
+      'block px-6 py-3 transition-colors duration-200',
       isActive
         ? 'border-l-2 border-primary bg-accent-muted/40 text-primary pl-[22px]'
         : 'text-foreground-secondary hover:bg-border-subtle hover:text-foreground',
@@ -38,6 +39,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const activeSection = useActiveSection(NAV_SECTION_IDS);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -131,48 +133,54 @@ export function Navbar() {
       </nav>
 
       {/* Mobile menu drawer */}
-      {mobileOpen && (
-        <div
-          id="mobile-menu"
-          className={cn(
-            'border-t border-border-subtle md:hidden',
-            'bg-background/95 backdrop-blur-md',
-          )}
-        >
-          <ul className="flex flex-col py-2">
-            {NAV_ITEMS.map((item) => {
-              const sectionId = sectionIdFromHref(item.href);
-              const isActive = activeSection === sectionId;
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            id="mobile-menu"
+            initial={reduced ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            animate={reduced ? { opacity: 1 } : { opacity: 1, height: 'auto' }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className={cn(
+              'overflow-hidden border-t border-border-subtle md:hidden',
+              'bg-background/95 backdrop-blur-md',
+            )}
+          >
+            <ul className="flex flex-col py-2">
+              {NAV_ITEMS.map((item) => {
+                const sectionId = sectionIdFromHref(item.href);
+                const isActive = activeSection === sectionId;
 
-              if (item.comingSoon) {
+                if (item.comingSoon) {
+                  return (
+                    <li key={item.href}>
+                      <span className="flex cursor-default select-none items-center justify-between px-6 py-3 text-sm font-medium text-muted-foreground/50">
+                        {item.label}
+                        <span className="text-[10px] uppercase tracking-wide text-muted-foreground/40">
+                          Soon
+                        </span>
+                      </span>
+                    </li>
+                  );
+                }
+
                 return (
                   <li key={item.href}>
-                    <span className="flex cursor-default select-none items-center justify-between px-6 py-3 text-sm font-medium text-muted-foreground/50">
+                    <Link
+                      href={item.href}
+                      aria-current={isActive ? 'true' : undefined}
+                      onClick={closeMobile}
+                      className={navLinkClass(isActive, 'mobile')}
+                    >
                       {item.label}
-                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground/40">
-                        Soon
-                      </span>
-                    </span>
+                    </Link>
                   </li>
                 );
-              }
-
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive ? 'true' : undefined}
-                    onClick={closeMobile}
-                    className={navLinkClass(isActive, 'mobile')}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+              })}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

@@ -26,7 +26,7 @@ export function BrandLogo({ className }: BrandLogoProps) {
     'h-9 w-9 sm:h-[42px] sm:w-[42px] lg:h-12 lg:w-12',
     'object-contain select-none',
     'transition-all duration-[250ms] ease-out',
-    'group-hover:scale-[1.04]',
+    'group-hover:scale-[1.02]',
   );
 
   return (

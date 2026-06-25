@@ -110,11 +110,11 @@ export function CapabilityNodeButton({
         reduce
           ? { opacity: isDimmed ? 0.35 : 1 }
           : {
-              scale:   isActive ? 1.1 : isConnected ? 1.04 : 1,
+              scale:   isActive ? 1.05 : isConnected ? 1.02 : 1,
               opacity: isDimmed ? 0.35 : 1,
             }
       }
-      transition={{ type: 'spring', stiffness: 310, damping: 24 }}
+      transition={{ type: 'spring', stiffness: 280, damping: 26 }}
     >
       <button
         type="button"

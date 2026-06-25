@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion, type Transition } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { beyondPanels, type BeyondPanel } from '@/data/beyond';
-import { fadeInUp } from '@/lib/animations';
+import { fadeInUp, SECTION_VIEWPORT } from '@/lib/animations';
+import { SECTION_PT, SECTION_PB } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 // ─── Animation constants ──────────────────────────────────────────────────────
@@ -33,32 +35,29 @@ export function BeyondSection() {
   return (
     <section
       id="beyond"
-      aria-label="Beyond 9-5"
+      aria-labelledby="beyond-heading"
       className="scroll-mt-20 overflow-x-hidden bg-background"
     >
       {/* ── Section header ── */}
-      <Container className="pt-20 pb-10 lg:pt-28 lg:pb-14">
+      <Container className={cn(SECTION_PT, 'pb-10 lg:pb-14')}>
         <motion.div
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={SECTION_VIEWPORT}
         >
-          <p className="mb-2 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">
-            Offline System
-          </p>
-          <h2 className="text-3xl font-bold tracking-[-0.025em] text-foreground sm:text-4xl">
-            Beyond 9–5
-          </h2>
-          <p className="mt-3 max-w-lg text-[14px] leading-relaxed text-foreground-secondary">
-            The parts of me that keep the engineering brain alive outside work.
-          </p>
+          <SectionHeader
+            eyebrow="Offline System"
+            title="Beyond 9–5"
+            subtitle="The parts of me that keep the engineering brain alive outside work."
+            headingId="beyond-heading"
+          />
         </motion.div>
       </Container>
 
       {/* ── Desktop: horizontal image accordion ── */}
       {/* Outer shell: visibility + centering only */}
-      <div className="hidden md:block">
+      <div className={cn('hidden md:block', SECTION_PB)}>
         <motion.div
           role="list"
           aria-label="Interest panels"
@@ -96,7 +95,7 @@ export function BeyondSection() {
       </div>
 
       {/* ── Mobile: stacked tap-to-expand cards ── */}
-      <Container className="md:hidden pb-20 pt-2">
+      <Container className={cn('md:hidden pt-2', SECTION_PB)}>
         <div className="flex flex-col gap-3">
           {beyondPanels.map((panel) => (
             <MobileCard

@@ -1,11 +1,31 @@
-import type { Variants } from 'framer-motion';
+import type { Transition, Variants } from 'framer-motion';
+
+/** Premium ease — used for reveals and section entrances */
+export const MOTION_EASE = [0.25, 0.46, 0.45, 0.94] as const;
+
+/** Shared timing tokens */
+export const MOTION_HOVER_MS = 0.25;
+export const MOTION_REVEAL_MS = 0.55;
+
+export const hoverTransition: Transition = {
+  duration: MOTION_HOVER_MS,
+  ease: MOTION_EASE,
+};
+
+export const revealTransition: Transition = {
+  duration: MOTION_REVEAL_MS,
+  ease: MOTION_EASE,
+};
+
+/** Default whileInView viewport for section headers */
+export const SECTION_VIEWPORT = { once: true, margin: '-80px' } as const;
 
 export const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: MOTION_REVEAL_MS, ease: MOTION_EASE },
   },
 };
 

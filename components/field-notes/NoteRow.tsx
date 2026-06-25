@@ -58,7 +58,7 @@ function NoteStatus({ note, isHovered }: { note: NoteData; isHovered: boolean })
         className={cn(
           'label-mono text-[11px] font-medium text-[var(--primary)]',
           'transition-all duration-200',
-          isHovered ? 'opacity-100 translate-x-0.5' : 'opacity-60',
+          isHovered ? 'opacity-100' : 'opacity-60',
         )}
         aria-hidden
       >

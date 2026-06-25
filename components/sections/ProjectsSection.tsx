@@ -3,10 +3,12 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ProjectShowcaseCard } from '@/components/projects/ProjectShowcaseCard';
 import { ProjectCaseStudyModal } from '@/components/projects/ProjectCaseStudyModal';
 import { projectsData, type ProjectData } from '@/data/projects';
-import { fadeInUp } from '@/lib/animations';
+import { fadeInUp, SECTION_VIEWPORT } from '@/lib/animations';
+import { SECTION_PY } from '@/lib/constants';
 
 // ─── Featured projects ────────────────────────────────────────────────────────
 //
@@ -56,7 +58,7 @@ export function ProjectsSection() {
           aria-hidden="true"
         />
 
-        <Container className="pt-20 pb-24 lg:pt-28 lg:pb-32">
+        <Container className={SECTION_PY}>
 
           {/* ── Section header ────────────────────────────────────────────── */}
           <motion.div
@@ -68,22 +70,14 @@ export function ProjectsSection() {
             }
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={SECTION_VIEWPORT}
           >
-            <p className="label-mono mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-              Selected Builds
-            </p>
-            <h2
-              id="projects-heading"
-              className="font-display text-4xl font-semibold leading-none tracking-tight text-[var(--foreground)] sm:text-5xl"
-            >
-              Projects
-            </h2>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--foreground-secondary)]">
-              AI systems, backend platforms, cloud-native tools, and automation
-              workflows — built with product thinking, engineering depth, and
-              execution ownership.
-            </p>
+            <SectionHeader
+              eyebrow="Selected Builds"
+              title="Projects"
+              subtitle="AI systems, backend platforms, cloud-native tools, and automation workflows — built with product thinking, engineering depth, and execution ownership."
+              headingId="projects-heading"
+            />
           </motion.div>
 
           {/* ── Project cards ──────────────────────────────────────────────── */}

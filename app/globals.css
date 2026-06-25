@@ -313,3 +313,18 @@ nav ol {
   filter: blur(0.5px);
   box-shadow: 0 0 6px 1px rgba(139, 92, 246, 0.25);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Smooth theme color cross-fade ─────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition:
+      background-color 350ms ease,
+      color 350ms ease;
+  }
+}

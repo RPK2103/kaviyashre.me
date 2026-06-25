@@ -156,6 +156,7 @@ export const projectsData: ProjectData[] = [
       'Serverless Azure URL shortener with storage, monitoring, clean routing, and cloud-native fundamentals.',
     tech: ['Azure Functions', 'Azure Storage', 'Azure Monitor'],
     meta: 'Azure Starter Build · 2026',
+    // TODO: Add cover at public/projects/url-shortener-cover.png and demo at public/projects/url-shortener-demo.mp4
     imagePath: '/projects/url-shortener-cover.png',
     videoPath: '/projects/url-shortener-demo.mp4',
     liveDemoUrl: undefined,

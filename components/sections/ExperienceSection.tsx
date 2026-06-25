@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { experienceData, type ExperienceItem } from '@/data/experience';
+import { SECTION_PY } from '@/lib/constants';
 
 /* ── Shared viewport config ───────────────────────────────────────────────── */
 
@@ -150,7 +152,7 @@ function LogoNode({ item, isActive, onActivate }: LogoNodeProps) {
           'relative flex items-center justify-center rounded-full',
           'h-[52px] w-[52px] md:h-16 md:w-16',
           'border transition-all duration-300 ease-out',
-          isActive ? 'scale-[1.1] border-[var(--primary)]' : 'border-[var(--border)]',
+          isActive ? 'scale-[1.04] border-primary' : 'border-border',
         )}
         style={{
           background: '#ffffff',
@@ -508,31 +510,25 @@ export function ExperienceSection() {
     <section
       id="experience"
       aria-labelledby="experience-heading"
-      className="relative scroll-mt-20 py-24 bg-[var(--background)]"
+      className={cn('relative scroll-mt-20 bg-background', SECTION_PY)}
     >
       <div className="absolute inset-x-0 top-0 h-px bg-[var(--border-subtle)]" aria-hidden="true" />
 
       <Container>
         {/* ── Section header ─────────────────────────────────────────────── */}
         <motion.div
-          className="mb-16 max-w-xl"
+          className="mb-14 max-w-xl lg:mb-16"
           variants={headerReveal}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <p className="label-mono mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--primary)]">
-            Career System
-          </p>
-          <h2
-            id="experience-heading"
-            className="font-display text-4xl font-semibold leading-none tracking-tight text-[var(--foreground)] sm:text-5xl"
-          >
-            Experience.
-          </h2>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-[var(--foreground-secondary)]">
-            A timeline of engineering ownership, production systems, and applied AI growth.
-          </p>
+          <SectionHeader
+            eyebrow="Career System"
+            title="Experience."
+            subtitle="A timeline of engineering ownership, production systems, and applied AI growth."
+            headingId="experience-heading"
+          />
         </motion.div>
 
         {/* ── Timeline ───────────────────────────────────────────────────── */}

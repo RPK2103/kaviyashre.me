@@ -41,7 +41,7 @@ export function HeroSection() {
             {/* Eyebrow */}
             <motion.p
               variants={fadeInUp}
-              className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
+              className="label-mono mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary"
             >
               Software Engineer
             </motion.p>

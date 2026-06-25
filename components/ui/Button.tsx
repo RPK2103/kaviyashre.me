@@ -9,16 +9,16 @@ type Size = 'sm' | 'md' | 'lg';
 const variantClasses: Record<Variant, string> = {
   primary: [
     'bg-accent text-accent-foreground',
-    'hover:opacity-90 active:scale-[0.98]',
+    'hover:opacity-90 active:opacity-95',
     'shadow-sm',
   ].join(' '),
   outline: [
     'border border-accent text-accent bg-transparent',
-    'hover:bg-accent/10 active:scale-[0.98]',
+    'hover:bg-accent/10 active:opacity-90',
   ].join(' '),
   ghost: [
     'text-foreground-secondary bg-transparent',
-    'hover:text-foreground hover:bg-border-subtle active:scale-[0.98]',
+    'hover:text-foreground hover:bg-border-subtle active:opacity-90',
   ].join(' '),
 };
 

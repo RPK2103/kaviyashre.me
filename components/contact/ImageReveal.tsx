@@ -80,7 +80,7 @@ export function ImageReveal({ alt, className }: ImageRevealProps) {
       className={cn(
         'group relative mx-auto w-full max-w-[420px]',
         'transition-transform duration-500 ease-out',
-        'hover:-translate-y-0.5 hover:rotate-[1.5deg]',
+        reduced ? '' : 'hover:-translate-y-0.5',
         className,
       )}
     >
@@ -89,8 +89,8 @@ export function ImageReveal({ alt, className }: ImageRevealProps) {
           'rounded-[20px] p-3 sm:p-3.5',
           'bg-white shadow-[0_8px_32px_-8px_rgba(30,27,24,0.12)]',
           'dark:bg-surface-variant dark:shadow-[0_8px_40px_-8px_rgba(0,0,0,0.55)]',
-          'rotate-[2deg] transition-transform duration-500 ease-out',
-          'group-hover:rotate-[1deg]',
+          'rotate-[1.5deg] transition-transform duration-500 ease-out',
+          !reduced && 'group-hover:rotate-[1deg]',
         )}
       >
         <div

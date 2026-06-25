@@ -122,7 +122,7 @@ export function ProjectShowcaseCard({
       animate={
         reduced
           ? {}
-          : { y: isHovered ? -5 : 0, scale: isHovered ? 1.005 : 1 }
+          : { y: isHovered ? -4 : 0 }
       }
       transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={cn(

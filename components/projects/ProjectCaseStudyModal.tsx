@@ -106,7 +106,7 @@ function CtaButton({ href, icon, label, disabled }: CtaButtonProps) {
       className={cn(
         base,
         'border border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)]',
-        'hover:opacity-90 active:scale-[0.98]',
+        'hover:opacity-90 active:opacity-95',
       )}
       onClick={(e) => e.stopPropagation()}
     >

@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Mail, FileDown, Calendar, Link2, Code2 } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ImageReveal } from '@/components/contact/ImageReveal';
-import { SOCIAL_LINKS } from '@/lib/constants';
+import { SOCIAL_LINKS, SECTION_PY } from '@/lib/constants';
 import { profile } from '@/data/profile';
 import { fadeInUp } from '@/lib/animations';
 import { cn } from '@/lib/utils';
@@ -49,8 +50,8 @@ function ContactRow({ href, icon, children, ariaLabel, download }: ContactRowPro
         className={cn(
           'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
           'border border-border-subtle bg-surface/80',
-          'text-primary transition-colors duration-200',
-          'group-hover:border-primary/30 group-hover:bg-accent-muted/50',
+          'text-primary transition-all duration-200',
+          'group-hover:border-primary/30 group-hover:bg-accent-muted/50 group-hover:-translate-y-px',
         )}
         aria-hidden
       >
@@ -75,7 +76,7 @@ export function ContactSection() {
         aria-hidden="true"
       />
 
-      <Container className="pt-20 pb-24 lg:pt-28 lg:pb-32">
+      <Container className={SECTION_PY}>
         <motion.article
           className={cn(
             'mx-auto w-[90%] max-w-[1180px] overflow-hidden rounded-[32px]',
@@ -97,24 +98,19 @@ export function ContactSection() {
           <div className="grid grid-cols-1 items-center gap-12 px-6 py-12 sm:px-10 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:px-14 lg:py-16 xl:px-16">
             {/* ── Copy & links ─────────────────────────────────────────── */}
             <div className="flex flex-col">
-              <p className="label-mono mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
-                Let&apos;s connect
-              </p>
-
-              <h2
-                id="contact-heading"
-                className="font-display text-4xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem]"
-              >
-                Let&apos;s build
-                <br />
-                <span className="italic text-primary">together.</span>
-              </h2>
-
-              <p className="mt-5 max-w-lg text-base leading-relaxed text-foreground-secondary">
-                I&apos;m currently open to AI engineering, backend engineering,
-                cloud engineering, and forward deployed engineering opportunities
-                where product thinking and reliable systems matter.
-              </p>
+              <SectionHeader
+                eyebrow="Let's connect"
+                title={
+                  <>
+                    Let&apos;s build
+                    <br />
+                    <span className="italic text-primary">together.</span>
+                  </>
+                }
+                subtitle="I'm currently open to AI engineering, backend engineering, cloud engineering, and forward deployed engineering opportunities where product thinking and reliable systems matter."
+                headingId="contact-heading"
+                className="mb-0"
+              />
 
               <div className="mt-8 flex flex-col gap-4 sm:mt-10">
                 <ContactRow

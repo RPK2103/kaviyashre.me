@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
+import { SectionHeader } from '@/components/ui/SectionHeader';
 import { cn } from '@/lib/utils';
-import { fadeInUp } from '@/lib/animations';
+import { fadeInUp, SECTION_VIEWPORT } from '@/lib/animations';
+import { SECTION_PY } from '@/lib/constants';
 import { CapabilityGraphView } from './capability-graph/CapabilityGraphView';
 import { SegmentedToggle, type GraphTab } from './capability-graph/SegmentedToggle';
 import { CATEGORY_DOT, type CapabilityCategory } from './capability-graph/capability-data';
@@ -28,7 +30,7 @@ export function CapabilityGraphSection() {
   return (
     <section
       id="skills"
-      aria-label="Engineering Capabilities"
+      aria-labelledby="skills-heading"
       className="relative overflow-hidden scroll-mt-20"
     >
       {/* Subtle radial tint matching the soft/dark theme accent */}
@@ -43,7 +45,7 @@ export function CapabilityGraphSection() {
         }}
       />
 
-      <Container className="relative py-20 lg:py-28">
+      <Container className={cn('relative', SECTION_PY)}>
 
         {/* ── Segmented toggle ─────────────────────────────────────────── */}
         <div className="mb-10 flex justify-center">
@@ -59,21 +61,20 @@ export function CapabilityGraphSection() {
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={SECTION_VIEWPORT}
           >
-            {/* Header text */}
-            <div>
-              <p className="mb-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.22em] text-accent">
-                Engineering System
-              </p>
-              <h2 className="text-3xl font-bold leading-[1.12] tracking-[-0.025em] text-foreground sm:text-4xl">
-                Capability<br />Graph
-              </h2>
-              <p className="mt-3 text-[13px] leading-relaxed text-foreground-secondary">
-                An AI-inspired map of the technologies and disciplines I use to build
-                scalable systems and intelligent products.
-              </p>
-
+            <SectionHeader
+              eyebrow="Engineering System"
+              title={
+                <>
+                  Capability
+                  <br />
+                  Graph
+                </>
+              }
+              subtitle="An AI-inspired map of the technologies and disciplines I use to build scalable systems and intelligent products."
+              headingId="skills-heading"
+            />
               {/* Helper hint */}
               <div className="mt-4 flex items-start gap-2">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
@@ -81,7 +82,6 @@ export function CapabilityGraphSection() {
                   Hover or click any node to explore real project evidence and context.
                 </p>
               </div>
-            </div>
 
             {/* Category legend — pushed to bottom of column on desktop */}
             <div className="mt-10 lg:mt-auto lg:pt-16">
