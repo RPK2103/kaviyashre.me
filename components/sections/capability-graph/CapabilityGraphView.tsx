@@ -6,15 +6,15 @@ import {
 } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { capabilityNodes, CAPABILITY_EDGES, type CapabilityNode } from './capability-data';
+import { capabilityNodes, type CapabilityNode } from './capability-data';
 import { CapabilityNodeButton } from './CapabilityNodeButton';
-import { GraphConnections } from './GraphConnections';
+import { ParticleField } from './ParticleField';
 import { CapabilityHoverCard } from './CapabilityHoverCard';
 
 // ─── Card position constants ──────────────────────────────────────────────────
 const CARD_W     = 268;
 const CARD_H_EST = 230;
-const NODE_R     = 27;  // half of 54px node circle (in px)
+const NODE_R     = 27;
 const CARD_GAP   = 16;
 
 function computeCardStyle(
@@ -26,7 +26,6 @@ function computeCardStyle(
   const cy = (node.position.y / 100) * ch;
   const top = Math.max(8, Math.min(ch - CARD_H_EST - 8, cy - CARD_H_EST / 2));
 
-  // Prefer right, fallback left, then clamp
   if (cx + NODE_R + CARD_GAP + CARD_W <= cw - 8) {
     return { position: 'absolute', top, left: cx + NODE_R + CARD_GAP, zIndex: 30 };
   }
@@ -39,7 +38,6 @@ function computeCardStyle(
 // ─── State types ──────────────────────────────────────────────────────────────
 interface CardState { nodeId: string; isPinned: boolean }
 
-// ─── Node map ─────────────────────────────────────────────────────────────────
 const NODE_MAP = new Map(capabilityNodes.map((n) => [n.id, n]));
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -57,7 +55,6 @@ export function CapabilityGraphView() {
   const activeNode    = activeNodeId ? (NODE_MAP.get(activeNodeId) ?? null) : null;
   const mobileNode    = mobileActive ? (NODE_MAP.get(mobileActive) ?? null) : null;
 
-  // ── Resize observer ────────────────────────────────────────────────────────
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -68,7 +65,6 @@ export function CapabilityGraphView() {
     return () => ro.disconnect();
   }, []);
 
-  // ── Timer helpers ──────────────────────────────────────────────────────────
   const cancelClose = useCallback(() => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
   }, []);
@@ -81,7 +77,6 @@ export function CapabilityGraphView() {
     );
   }, [cancelClose]);
 
-  // ── Desktop interaction handlers ───────────────────────────────────────────
   const handleEnter = useCallback((id: string) => {
     cancelClose();
     setCard((p) => p?.isPinned ? p : { nodeId: id, isPinned: false });
@@ -104,7 +99,6 @@ export function CapabilityGraphView() {
   const handleCardLeave    = useCallback(() => scheduleClose(), [scheduleClose]);
   const handleCardClose    = useCallback(() => setCard(null),    []);
 
-  // ── Escape key ─────────────────────────────────────────────────────────────
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { setCard(null); setMobileActive(null); }
@@ -113,91 +107,84 @@ export function CapabilityGraphView() {
     return () => document.removeEventListener('keydown', fn);
   }, []);
 
-  // ── Connected node set (for dimming) ───────────────────────────────────────
-  const connectedIds = useMemo(() => {
-    if (!activeNodeId) return new Set<string>();
-    return new Set(NODE_MAP.get(activeNodeId)?.related ?? []);
-  }, [activeNodeId]);
-
-  const mobileConnectedIds = useMemo(() => {
-    if (!mobileActive) return new Set<string>();
-    return new Set(NODE_MAP.get(mobileActive)?.related ?? []);
-  }, [mobileActive]);
-
-  // ── Floating card position ─────────────────────────────────────────────────
   const cardStyle = useMemo((): CSSProperties | null => {
     if (!activeNode || canvasSize.w === 0) return null;
     return computeCardStyle(activeNode, canvasSize.w, canvasSize.h);
   }, [activeNode, canvasSize]);
 
-  // ── Canvas background style ────────────────────────────────────────────────
   const canvasBg: CSSProperties = {
+    backgroundColor: 'var(--surface)',
     backgroundImage:
-      'radial-gradient(circle at 50% 50%, ' +
-      'color-mix(in srgb, var(--color-accent) 4%, transparent) 0%, ' +
+      'radial-gradient(ellipse 68% 52% at 56% 44%, ' +
+      'color-mix(in srgb, var(--color-primary) 4%, transparent) 0%, ' +
       'transparent 70%)',
   };
 
-  // ─── Render ─────────────────────────────────────────────────────────────────
+  const renderNodes = (
+    activeId: string | null,
+    handlers: {
+      onClick: (id: string) => void;
+      onEnter: (id: string) => void;
+      onLeave: () => void;
+      onFocus: (id: string) => void;
+      onBlur: () => void;
+    },
+    showOrbitals: boolean,
+  ) =>
+    capabilityNodes.map((node) => (
+      <CapabilityNodeButton
+        key={node.id}
+        node={node}
+        isActive={node.id === activeId}
+        isConnected={false}
+        isDimmed={false}
+        showOrbitals={showOrbitals}
+        onClick={() => handlers.onClick(node.id)}
+        onMouseEnter={() => handlers.onEnter(node.id)}
+        onMouseLeave={handlers.onLeave}
+        onFocus={() => handlers.onFocus(node.id)}
+        onBlur={handlers.onBlur}
+      />
+    ));
 
   return (
     <>
-      {/* ══ Desktop graph ══════════════════════════════════════════════════ */}
+      {/* ══ Desktop ════════════════════════════════════════════════════════ */}
       <div className="hidden md:block">
-        {/*
-          Outer: relative, no overflow-hidden → floating card can bleed
-          Inner bg layer: overflow-hidden + rounded → clips dot grid to corners
-        */}
         <div
           ref={containerRef}
           className="relative w-full"
-          style={{ height: '500px' }}
+          style={{ height: '480px' }}
           role="region"
           aria-label="Capability graph — hover or click a node to explore"
         >
-          {/* Background tint + rounded border — overflow hidden to clip bg to corners */}
           <div
             aria-hidden
             className={cn(
-              'pointer-events-none absolute inset-0 rounded-2xl overflow-hidden',
-              'border border-black/[0.06] dark:border-white/[0.05]',
+              'pointer-events-none absolute inset-0 overflow-hidden rounded-2xl',
+              'border border-black/[0.05] dark:border-white/[0.06]',
             )}
             style={canvasBg}
           />
 
-          {/* SVG: connections + particles + constellation */}
-          <GraphConnections activeNodeId={activeNodeId} connectedIds={connectedIds} />
+          <ParticleField activeNodeId={activeNodeId} variant="desktop" />
 
-          {/* Nodes */}
-          {capabilityNodes.map((node) => {
-            const isActive    = node.id === activeNodeId;
-            const isConnected = !isActive && connectedIds.has(node.id);
-            const isDimmed    = !!activeNodeId && !isActive && !isConnected;
-            return (
-              <CapabilityNodeButton
-                key={node.id}
-                node={node}
-                isActive={isActive}
-                isConnected={isConnected}
-                isDimmed={isDimmed}
-                onClick={() => handleClick(node.id)}
-                onMouseEnter={() => handleEnter(node.id)}
-                onMouseLeave={handleLeave}
-                onFocus={() => handleFocus(node.id)}
-                onBlur={handleBlur}
-              />
-            );
-          })}
+          {renderNodes(activeNodeId, {
+            onClick: handleClick,
+            onEnter: handleEnter,
+            onLeave: handleLeave,
+            onFocus: handleFocus,
+            onBlur: handleBlur,
+          }, true)}
 
-          {/* Floating evidence card */}
           <AnimatePresence>
             {activeNode && cardStyle && (
               <motion.div
                 key={activeNode.id}
                 style={cardStyle}
                 initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 6 }}
-                animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1,    y: 0 }}
-                exit={reduce  ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 6 }}
+                animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+                exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, y: 6 }}
                 transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
               >
                 <CapabilityHoverCard
@@ -210,24 +197,13 @@ export function CapabilityGraphView() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* First-load hint */}
-          {!card && (
-            <p
-              aria-hidden
-              className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 select-none text-[10px] text-muted-foreground/40"
-            >
-              Hover or click any node to explore
-            </p>
-          )}
         </div>
       </div>
 
-      {/* ══ Mobile: horizontal scroll + card below ═════════════════════════ */}
+      {/* ══ Mobile ═══════════════════════════════════════════════════════════ */}
       <div className="md:hidden">
-        {/* Scroll wrapper */}
         <div
-          className="overflow-x-auto scrollbar-none rounded-2xl border border-black/[0.06] dark:border-white/[0.05]"
+          className="overflow-x-auto scrollbar-none rounded-2xl border border-black/[0.05] dark:border-white/[0.06]"
           style={canvasBg}
         >
           <div
@@ -236,33 +212,18 @@ export function CapabilityGraphView() {
             role="region"
             aria-label="Capability graph — tap a node to explore"
           >
-            {/* SVG (uses mobile connected IDs) */}
-            <GraphConnections activeNodeId={mobileActive} connectedIds={mobileConnectedIds} />
+            <ParticleField activeNodeId={mobileActive} variant="mobile" />
 
-            {/* Nodes */}
-            {capabilityNodes.map((node) => {
-              const isActive    = node.id === mobileActive;
-              const isConnected = !isActive && mobileConnectedIds.has(node.id);
-              const isDimmed    = !!mobileActive && !isActive && !isConnected;
-              return (
-                <CapabilityNodeButton
-                  key={node.id}
-                  node={node}
-                  isActive={isActive}
-                  isConnected={isConnected}
-                  isDimmed={isDimmed}
-                  onClick={() => setMobileActive((p) => (p === node.id ? null : node.id))}
-                  onMouseEnter={() => undefined}
-                  onMouseLeave={() => undefined}
-                  onFocus={() => setMobileActive(node.id)}
-                  onBlur={() => undefined}
-                />
-              );
-            })}
+            {renderNodes(mobileActive, {
+              onClick: (id) => setMobileActive((p) => (p === id ? null : id)),
+              onEnter: () => undefined,
+              onLeave: () => undefined,
+              onFocus: (id) => setMobileActive(id),
+              onBlur: () => undefined,
+            }, false)}
           </div>
         </div>
 
-        {/* Mobile evidence card — in document flow below the graph */}
         <AnimatePresence>
           {mobileNode && (
             <motion.div

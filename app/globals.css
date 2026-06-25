@@ -50,6 +50,11 @@
 
   /* ── Focus ring ── */
   --ring:                  #795465;
+
+  /* ── Capability graph connector tokens (soft theme) ── */
+  --cgn-violet:            #8b5cf6;
+  --cgn-pink:              #ec4899;
+  --cgn-blue:              #3b82f6;
 }
 
 /* ─── Space Theme (dark) ─────────────────────────────────────────────────────
@@ -106,6 +111,11 @@
 
   /* ── Focus ring ── */
   --ring:                  #8b5cf6;
+
+  /* ── Capability graph connector tokens (space theme) ── */
+  --cgn-violet:            #a78bfa;
+  --cgn-pink:              #f472b6;
+  --cgn-blue:              #60a5fa;
 }
 
 /* ─── Tailwind v4 Design Tokens ──────────────────────────────────────────────
@@ -270,6 +280,70 @@ nav ol {
 
 .animate-cursor-blink {
   animation: cursor-blink 1.2s step-start infinite;
+}
+
+/* ─── Capability graph sparkle field ─────────────────────────────────────── */
+.cgn-sparkle {
+  background-color: var(--sparkle-color-light);
+}
+.dark .cgn-sparkle {
+  background-color: var(--sparkle-color-dark);
+}
+
+.cgn-sparkle-glow {
+  box-shadow: 0 0 4px 1px color-mix(in srgb, var(--sparkle-color-light) 52%, transparent);
+}
+
+.dark .cgn-sparkle-glow {
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--sparkle-color-dark) 48%, transparent);
+}
+
+@keyframes cgn-sparkle-twinkle {
+  0%, 100% { opacity: var(--sparkle-base); }
+  50%       { opacity: var(--sparkle-peak); }
+}
+
+@keyframes cgn-sparkle-float {
+  0%, 100% {
+    opacity: var(--sparkle-base);
+    transform: translate(0, 0);
+  }
+  50% {
+    opacity: var(--sparkle-peak);
+    transform: translate(var(--drift-x), var(--drift-y));
+  }
+}
+
+/* 4-point star sparkle — cross arms via pseudo-elements */
+.cgn-sparkle-star {
+  display: block;
+  position: relative;
+}
+
+.cgn-sparkle-star::before,
+.cgn-sparkle-star::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background-color: var(--sparkle-color-light);
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+}
+
+.dark .cgn-sparkle-star::before,
+.dark .cgn-sparkle-star::after {
+  background-color: var(--sparkle-color-dark);
+}
+
+.cgn-sparkle-star::before {
+  width: var(--star-arm, 2px);
+  height: 100%;
+}
+
+.cgn-sparkle-star::after {
+  width: 100%;
+  height: var(--star-arm, 2px);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */

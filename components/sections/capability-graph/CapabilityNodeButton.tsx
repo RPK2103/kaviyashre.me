@@ -7,7 +7,7 @@ import {
   Workflow, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { type CapabilityNode, type CapabilityCategory, CATEGORY_DOT } from './capability-data';
+import { type CapabilityNode, type CapabilityCategory } from './capability-data';
 
 // ─── Icon registry ────────────────────────────────────────────────────────────
 
@@ -16,64 +16,195 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Bot, Server, Network, Box, Atom, Braces, Wind, GitBranch, Workflow,
 };
 
+// ─── Deterministic per-node motion params ─────────────────────────────────────
+
+function hashId(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+  return h;
+}
+
+function nodeDrift(id: string): { dx: number; dy: number; duration: number; delay: number } {
+  const h = hashId(id);
+  const h2 = hashId(`${id}-y`);
+  const dxMag = 6 + (Math.abs(h) % 7);
+  const dyMag = 5 + (Math.abs(h2) % 6);
+  const dxSign = h % 2 === 0 ? 1 : -1;
+  const dySign = h2 % 2 === 0 ? 1 : -1;
+
+  return {
+    dx: dxSign * dxMag,
+    dy: dySign * dyMag,
+    duration: 5 + (Math.abs(h) % 5),
+    delay: (Math.abs(h) % 35) / 10,
+  };
+}
+
+function nodeOrbit(id: string) {
+  const h = hashId(id);
+  const h2 = hashId(`${id}-orbit`);
+
+  return {
+    width:  90 + (Math.abs(h) % 26),
+    height: 42 + (Math.abs(h2) % 19),
+    tilt:   (Math.abs(h) % 50) - 25,
+    clockwise: h % 2 === 0,
+    duration: 8 + (Math.abs(h2) % 7),
+    delay: (Math.abs(h) % 40) / 10,
+    dotSize: 4 + (Math.abs(h2) % 2),
+  };
+}
+
 // ─── Category visual config ───────────────────────────────────────────────────
-// Ring / bg colors use Tailwind standard palette (pink, violet, sky, etc.)
-// which are included in Tailwind v4's default theme.
-// Glow values are CSS box-shadow strings for inline style — needed because
-// Tailwind can't generate the multi-layer color values dynamically.
 
 interface CatVisual {
-  border: string;   // Tailwind class
-  bg: string;       // Tailwind class
-  icon: string;     // Tailwind class
-  idleGlow: string; // CSS box-shadow
+  border: string;
+  borderActive: string;
+  icon: string;
+  orbitalColor: string;
+  ringColor: string;
+  idleGlow: string;
   activeGlow: string;
+  innerHighlight: string;
 }
 
 const CAT_VISUAL: Record<CapabilityCategory, CatVisual> = {
   AI: {
-    border:     'border-pink-300/60 dark:border-pink-400/50',
-    bg:         'bg-pink-50/70 dark:bg-pink-950/25',
-    icon:       'text-pink-500 dark:text-pink-400',
-    idleGlow:   '0 0 0 1px rgba(244,114,182,.10), inset 0 1px 3px rgba(244,114,182,.08)',
-    activeGlow: '0 0 22px rgba(244,114,182,.55), 0 0 44px rgba(244,114,182,.22), inset 0 1px 4px rgba(244,114,182,.18)',
+    border:         'border-pink-400/75 dark:border-pink-400/65',
+    borderActive:   'border-pink-500 dark:border-pink-300',
+    icon:           'text-pink-500 dark:text-pink-400',
+    orbitalColor:   'rgba(236,72,153,0.75)',
+    ringColor:      'rgba(236,72,153,0.35)',
+    idleGlow:       '0 0 0 1px rgba(236,72,153,0.30), 0 0 24px rgba(236,72,153,0.20), inset 0 1px 6px rgba(255,255,255,0.55)',
+    activeGlow:     '0 0 0 1px rgba(236,72,153,0.58), 0 0 30px rgba(236,72,153,0.36), 0 0 48px rgba(236,72,153,0.14), inset 0 1px 8px rgba(255,255,255,0.65)',
+    innerHighlight: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55) 0%, transparent 62%)',
   },
   Backend: {
-    border:     'border-violet-300/60 dark:border-violet-400/50',
-    bg:         'bg-violet-50/70 dark:bg-violet-950/25',
-    icon:       'text-violet-500 dark:text-violet-400',
-    idleGlow:   '0 0 0 1px rgba(167,139,250,.10), inset 0 1px 3px rgba(167,139,250,.08)',
-    activeGlow: '0 0 22px rgba(167,139,250,.55), 0 0 44px rgba(167,139,250,.22), inset 0 1px 4px rgba(167,139,250,.18)',
+    border:         'border-violet-400/75 dark:border-violet-400/65',
+    borderActive:   'border-violet-500 dark:border-violet-300',
+    icon:           'text-violet-600 dark:text-violet-400',
+    orbitalColor:   'rgba(139,92,246,0.75)',
+    ringColor:      'rgba(139,92,246,0.35)',
+    idleGlow:       '0 0 0 1px rgba(139,92,246,0.30), 0 0 24px rgba(139,92,246,0.20), inset 0 1px 6px rgba(255,255,255,0.55)',
+    activeGlow:     '0 0 0 1px rgba(139,92,246,0.58), 0 0 30px rgba(139,92,246,0.36), 0 0 48px rgba(139,92,246,0.14), inset 0 1px 8px rgba(255,255,255,0.65)',
+    innerHighlight: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55) 0%, transparent 62%)',
   },
   Cloud: {
-    border:     'border-sky-300/60 dark:border-sky-400/50',
-    bg:         'bg-sky-50/70 dark:bg-sky-950/25',
-    icon:       'text-sky-500 dark:text-sky-400',
-    idleGlow:   '0 0 0 1px rgba(56,189,248,.10), inset 0 1px 3px rgba(56,189,248,.08)',
-    activeGlow: '0 0 22px rgba(56,189,248,.55), 0 0 44px rgba(56,189,248,.22), inset 0 1px 4px rgba(56,189,248,.18)',
+    border:         'border-blue-400/75 dark:border-blue-400/65',
+    borderActive:   'border-blue-500 dark:border-blue-300',
+    icon:           'text-blue-500 dark:text-blue-400',
+    orbitalColor:   'rgba(59,130,246,0.75)',
+    ringColor:      'rgba(59,130,246,0.32)',
+    idleGlow:       '0 0 0 1px rgba(59,130,246,0.28), 0 0 24px rgba(59,130,246,0.18), inset 0 1px 6px rgba(255,255,255,0.55)',
+    activeGlow:     '0 0 0 1px rgba(59,130,246,0.55), 0 0 30px rgba(59,130,246,0.34), 0 0 48px rgba(59,130,246,0.13), inset 0 1px 8px rgba(255,255,255,0.65)',
+    innerHighlight: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55) 0%, transparent 62%)',
   },
   Frontend: {
-    border:     'border-rose-300/60 dark:border-rose-400/50',
-    bg:         'bg-rose-50/70 dark:bg-rose-950/25',
-    icon:       'text-rose-500 dark:text-rose-400',
-    idleGlow:   '0 0 0 1px rgba(251,113,133,.10), inset 0 1px 3px rgba(251,113,133,.08)',
-    activeGlow: '0 0 22px rgba(251,113,133,.55), 0 0 44px rgba(251,113,133,.22), inset 0 1px 4px rgba(251,113,133,.18)',
+    border:         'border-pink-400/75 dark:border-pink-400/65',
+    borderActive:   'border-pink-500 dark:border-pink-300',
+    icon:           'text-pink-500 dark:text-pink-400',
+    orbitalColor:   'rgba(236,72,153,0.75)',
+    ringColor:      'rgba(236,72,153,0.35)',
+    idleGlow:       '0 0 0 1px rgba(236,72,153,0.30), 0 0 24px rgba(236,72,153,0.20), inset 0 1px 6px rgba(255,255,255,0.55)',
+    activeGlow:     '0 0 0 1px rgba(236,72,153,0.58), 0 0 30px rgba(236,72,153,0.36), 0 0 48px rgba(236,72,153,0.14), inset 0 1px 8px rgba(255,255,255,0.65)',
+    innerHighlight: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55) 0%, transparent 62%)',
   },
   Automation: {
-    border:     'border-purple-300/60 dark:border-purple-400/50',
-    bg:         'bg-purple-50/70 dark:bg-purple-950/25',
-    icon:       'text-purple-500 dark:text-purple-400',
-    idleGlow:   '0 0 0 1px rgba(192,132,252,.10), inset 0 1px 3px rgba(192,132,252,.08)',
-    activeGlow: '0 0 22px rgba(192,132,252,.55), 0 0 44px rgba(192,132,252,.22), inset 0 1px 4px rgba(192,132,252,.18)',
+    border:         'border-violet-400/75 dark:border-violet-400/65',
+    borderActive:   'border-violet-500 dark:border-violet-300',
+    icon:           'text-violet-600 dark:text-violet-400',
+    orbitalColor:   'rgba(139,92,246,0.75)',
+    ringColor:      'rgba(139,92,246,0.35)',
+    idleGlow:       '0 0 0 1px rgba(139,92,246,0.30), 0 0 24px rgba(139,92,246,0.20), inset 0 1px 6px rgba(255,255,255,0.55)',
+    activeGlow:     '0 0 0 1px rgba(139,92,246,0.58), 0 0 30px rgba(139,92,246,0.36), 0 0 48px rgba(139,92,246,0.14), inset 0 1px 8px rgba(255,255,255,0.65)',
+    innerHighlight: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55) 0%, transparent 62%)',
   },
   DevOps: {
-    border:     'border-slate-300/60 dark:border-slate-500/50',
-    bg:         'bg-slate-50/70 dark:bg-slate-900/25',
-    icon:       'text-slate-500 dark:text-slate-400',
-    idleGlow:   '0 0 0 1px rgba(148,163,184,.10), inset 0 1px 3px rgba(148,163,184,.08)',
-    activeGlow: '0 0 18px rgba(148,163,184,.45), 0 0 36px rgba(148,163,184,.18), inset 0 1px 4px rgba(148,163,184,.15)',
+    border:         'border-blue-400/75 dark:border-blue-400/65',
+    borderActive:   'border-blue-500 dark:border-blue-300',
+    icon:           'text-blue-500 dark:text-blue-400',
+    orbitalColor:   'rgba(59,130,246,0.75)',
+    ringColor:      'rgba(59,130,246,0.32)',
+    idleGlow:       '0 0 0 1px rgba(59,130,246,0.28), 0 0 24px rgba(59,130,246,0.18), inset 0 1px 6px rgba(255,255,255,0.55)',
+    activeGlow:     '0 0 0 1px rgba(59,130,246,0.55), 0 0 30px rgba(59,130,246,0.34), 0 0 48px rgba(59,130,246,0.13), inset 0 1px 8px rgba(255,255,255,0.65)',
+    innerHighlight: 'radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55) 0%, transparent 62%)',
   },
 };
+
+// ─── Elliptical atom orbit ring ───────────────────────────────────────────────
+
+interface OrbitProps {
+  width: number;
+  height: number;
+  tilt: number;
+  clockwise: boolean;
+  duration: number;
+  delay: number;
+  dotSize: number;
+  ringColor: string;
+  dotColor: string;
+  isActive: boolean;
+  reduce: boolean | null;
+}
+
+function NodeAtomOrbit({
+  width, height, tilt, clockwise, duration, delay, dotSize,
+  ringColor, dotColor, isActive, reduce,
+}: OrbitProps) {
+  const ringOpacity = isActive ? 0.48 : 0.24;
+
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute left-1/2 top-[27px] z-0 -translate-x-1/2 -translate-y-1/2"
+      style={{ width, height }}
+    >
+      <motion.div
+        className="absolute inset-0"
+        style={{ rotate: tilt }}
+        animate={
+          reduce
+            ? { rotate: tilt }
+            : { rotate: tilt + (clockwise ? 360 : -360) }
+        }
+        transition={
+          reduce
+            ? undefined
+            : { duration, repeat: Infinity, ease: 'linear', delay }
+        }
+      >
+        <svg
+          className="absolute inset-0 h-full w-full overflow-visible"
+          viewBox={`0 0 ${width} ${height}`}
+          aria-hidden
+        >
+          <ellipse
+            cx={width / 2}
+            cy={height / 2}
+            rx={width / 2 - 3}
+            ry={height / 2 - 3}
+            fill="none"
+            stroke={ringColor}
+            strokeWidth={1}
+            strokeDasharray="5 6"
+            opacity={ringOpacity}
+          />
+        </svg>
+
+        <span
+          className="absolute left-1/2 top-0 -translate-x-1/2 rounded-full"
+          style={{
+            width: dotSize,
+            height: dotSize,
+            background: dotColor,
+            opacity: isActive ? 0.85 : 0.7,
+            boxShadow: `0 0 6px 1px ${dotColor}`,
+          }}
+        />
+      </motion.div>
+    </div>
+  );
+}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -82,6 +213,7 @@ interface Props {
   isActive: boolean;
   isConnected: boolean;
   isDimmed: boolean;
+  showOrbitals?: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -90,15 +222,17 @@ interface Props {
 }
 
 export function CapabilityNodeButton({
-  node, isActive, isConnected, isDimmed,
+  node, isActive, showOrbitals = false,
   onClick, onMouseEnter, onMouseLeave, onFocus, onBlur,
 }: Props) {
   const reduce = useReducedMotion();
   const cfg = CAT_VISUAL[node.category];
   const Icon = ICON_MAP[node.iconKey] ?? Globe;
+  const drift = nodeDrift(node.id);
+  const orbit = nodeOrbit(node.id);
 
   return (
-    <motion.div
+    <div
       className="absolute"
       style={{
         left: `${node.position.x}%`,
@@ -106,63 +240,88 @@ export function CapabilityNodeButton({
         transform: 'translate(-50%, -50%)',
         zIndex: isActive ? 20 : 10,
       }}
-      animate={
-        reduce
-          ? { opacity: isDimmed ? 0.35 : 1 }
-          : {
-              scale:   isActive ? 1.05 : isConnected ? 1.02 : 1,
-              opacity: isDimmed ? 0.35 : 1,
-            }
-      }
-      transition={{ type: 'spring', stiffness: 280, damping: 26 }}
     >
-      <button
-        type="button"
-        aria-label={`View evidence for ${node.label}`}
-        aria-pressed={isActive}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        className="group flex flex-col items-center gap-2 focus-visible:outline-none"
+      <motion.div
+        animate={
+          reduce
+            ? undefined
+            : { x: [0, drift.dx, 0], y: [0, drift.dy, 0] }
+        }
+        transition={
+          reduce
+            ? undefined
+            : {
+                duration: drift.duration,
+                repeat: Infinity,
+                repeatType: 'mirror',
+                ease: 'easeInOut',
+                delay: drift.delay,
+              }
+        }
       >
-        {/* ── Glassy circle ─────────────────────────────────────────────── */}
-        <div
-          className={cn(
-            'relative flex h-[54px] w-[54px] items-center justify-center rounded-full',
-            'border-2 backdrop-blur-sm transition-shadow duration-350',
-            cfg.border,
-            cfg.bg,
-            // Focus ring rendered on the circle, not the full button
-            'group-focus-visible:ring-2 group-focus-visible:ring-ring group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
-          )}
-          style={{
-            boxShadow: isActive ? cfg.activeGlow : cfg.idleGlow,
-            // Radial inner glow using the category color
-            background: isActive
-              ? `radial-gradient(circle at 38% 32%, rgba(255,255,255,.55) 0%, transparent 65%),
-                 radial-gradient(circle at 65% 70%, ${CATEGORY_DOT[node.category]}22 0%, transparent 55%)`
-              : `radial-gradient(circle at 38% 32%, rgba(255,255,255,.40) 0%, transparent 65%)`,
-          }}
+        <motion.div
+          animate={reduce ? undefined : { scale: isActive ? 1.06 : 1 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 26 }}
         >
-          <Icon
-            className={cn('relative z-10 h-5 w-5', cfg.icon)}
-            strokeWidth={1.75}
-          />
-        </div>
+          <button
+            type="button"
+            aria-label={`View evidence for ${node.label}`}
+            aria-pressed={isActive}
+            onClick={onClick}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            className="group relative flex flex-col items-center gap-2 focus-visible:outline-none"
+          >
+            {showOrbitals && (
+              <NodeAtomOrbit
+                width={orbit.width}
+                height={orbit.height}
+                tilt={orbit.tilt}
+                clockwise={orbit.clockwise}
+                duration={orbit.duration}
+                delay={orbit.delay}
+                dotSize={orbit.dotSize}
+                ringColor={cfg.ringColor}
+                dotColor={cfg.orbitalColor}
+                isActive={isActive}
+                reduce={reduce}
+              />
+            )}
 
-        {/* ── Label ─────────────────────────────────────────────────────── */}
-        <span
-          className={cn(
-            'max-w-[72px] text-center text-[10px] font-medium leading-tight',
-            'transition-colors duration-200',
-            isActive ? 'text-foreground' : 'text-muted-foreground',
-          )}
-        >
-          {node.label}
-        </span>
-      </button>
-    </motion.div>
+            <div
+              className={cn(
+                'relative z-[1] flex h-[54px] w-[54px] items-center justify-center rounded-full',
+                'border bg-white transition-[box-shadow,border-color] duration-300',
+                'dark:bg-surface',
+                isActive ? cfg.borderActive : cfg.border,
+                'group-focus-visible:ring-2 group-focus-visible:ring-ring',
+                'group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background',
+              )}
+              style={{
+                boxShadow: isActive ? cfg.activeGlow : cfg.idleGlow,
+                backgroundImage: cfg.innerHighlight,
+              }}
+            >
+              <Icon
+                className={cn('relative z-10 h-5 w-5', cfg.icon)}
+                strokeWidth={1.75}
+              />
+            </div>
+
+            <span
+              className={cn(
+                'relative z-[1] max-w-[72px] text-center text-[10px] font-medium leading-tight',
+                'transition-colors duration-200',
+                isActive ? 'text-foreground' : 'text-muted-foreground',
+              )}
+            >
+              {node.label}
+            </span>
+          </button>
+        </motion.div>
+      </motion.div>
+    </div>
   );
 }

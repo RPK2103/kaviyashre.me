@@ -39,14 +39,64 @@ export const CATEGORY_DOT: Record<CapabilityCategory, string> = {
 
 // ─── Edges ────────────────────────────────────────────────────────────────────
 // Connections per spec (18 directed → 18 unique bidirectional edges).
-// S-curve formula: M x1 y1 C mx y1 mx y2 x2 y2
-// where mx = (x1+x2)/2.
+// Cubic Bezier paths with deterministic perpendicular bend for organic routing.
+
+export type ConnectionColor = 'violet' | 'pink' | 'blue';
+
+export const CATEGORY_CONNECTION_COLOR: Record<CapabilityCategory, ConnectionColor> = {
+  AI:         'pink',
+  Backend:    'violet',
+  Cloud:      'blue',
+  DevOps:     'blue',
+  Frontend:   'pink',
+  Automation: 'violet',
+};
 
 export interface CapabilityEdge {
   id: string;
   sourceId: string;
   targetId: string;
   d: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  colorFrom: ConnectionColor;
+  colorTo: ConnectionColor;
+}
+
+/** Deterministic bend sign from edge key — keeps routing stable across renders. */
+function edgeBendSign(key: string): number {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) | 0;
+  return hash % 2 === 0 ? 1 : -1;
+}
+
+/** Smooth cubic Bezier with organic perpendicular offset. */
+function buildCurveD(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  key: string,
+): string {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dist = Math.hypot(dx, dy);
+  if (dist < 0.001) return `M ${x1} ${y1} L ${x2} ${y2}`;
+
+  const sign = edgeBendSign(key);
+  const px = (-dy / dist) * sign;
+  const py = (dx / dist) * sign;
+  const offset = Math.min(dist * 0.30, 13);
+
+  const c1x = x1 + dx * 0.28 + px * offset;
+  const c1y = y1 + dy * 0.28 + py * offset;
+  const c2x = x1 + dx * 0.72 + px * offset * 0.88;
+  const c2y = y1 + dy * 0.72 + py * offset * 0.88;
+
+  const fmt = (n: number) => n.toFixed(2);
+  return `M ${fmt(x1)} ${fmt(y1)} C ${fmt(c1x)} ${fmt(c1y)} ${fmt(c2x)} ${fmt(c2y)} ${fmt(x2)} ${fmt(y2)}`;
 }
 
 export function buildEdges(nodes: CapabilityNode[]): CapabilityEdge[] {
@@ -63,12 +113,17 @@ export function buildEdges(nodes: CapabilityNode[]): CapabilityEdge[] {
       if (!target) continue;
       const { x: x1, y: y1 } = node.position;
       const { x: x2, y: y2 } = target.position;
-      const mx = (x1 + x2) / 2;
       edges.push({
         id: key,
         sourceId: node.id,
         targetId: relId,
-        d: `M ${x1} ${y1} C ${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`,
+        d: buildCurveD(x1, y1, x2, y2, key),
+        x1,
+        y1,
+        x2,
+        y2,
+        colorFrom: CATEGORY_CONNECTION_COLOR[node.category],
+        colorTo: CATEGORY_CONNECTION_COLOR[target.category],
       });
     }
   }
@@ -249,15 +304,5 @@ export const capabilityNodes: CapabilityNode[] = [
   },
 ];
 
-// Pre-built edge list (consumed by GraphConnections)
+// Pre-built edge list (retained for data model; connectors not rendered)
 export const CAPABILITY_EDGES = buildEdges(capabilityNodes);
-
-// Idle particle paths — spread across clusters for visual variety
-export const IDLE_PARTICLE_PATHS: Array<{ edgeId: string; dur: number; begin: number }> = [
-  { edgeId: 'java::spring-boot',        dur: 3.0, begin: 0.0 },
-  { edgeId: 'rest-apis::azure',         dur: 3.8, begin: 0.8 },
-  { edgeId: 'azure::kubernetes',        dur: 3.2, begin: 1.6 },
-  { edgeId: 'react::typescript',        dur: 2.6, begin: 0.4 },
-  { edgeId: 'python::fastapi',          dur: 3.5, begin: 1.2 },
-  { edgeId: 'framer-motion::github-actions', dur: 4.0, begin: 2.0 },
-];

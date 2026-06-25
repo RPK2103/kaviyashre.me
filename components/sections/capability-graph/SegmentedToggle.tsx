@@ -10,7 +10,7 @@ interface SegmentedToggleProps {
 }
 
 const TABS: Array<{ id: GraphTab; label: string; disabled?: boolean }> = [
-  { id: 'graph',          label: 'Capability Graph' },
+  { id: 'graph',          label: 'Skills' },
   { id: 'certifications', label: 'Certifications', disabled: true },
 ];
 
