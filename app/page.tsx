@@ -5,6 +5,7 @@ import { CapabilityGraphSection } from '@/components/sections/CapabilityGraphSec
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { BeyondSection } from '@/components/sections/BeyondSection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
+import { FieldNotesSection } from '@/components/sections/FieldNotesSection';
 
 export default function HomePage() {
   return (
@@ -17,7 +18,8 @@ export default function HomePage() {
         <ExperienceSection />
         <BeyondSection />
         <ProjectsSection />
-        {/* <ContactSection />  — Phase 7 */}
+        <FieldNotesSection />
+        {/* <ContactSection />  — Phase 8 */}
       </main>
     </>
   );
