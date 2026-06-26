@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { cn } from '@/lib/utils';
 import { fadeInUp, SECTION_VIEWPORT } from '@/lib/animations';
 import { SECTION_PY } from '@/lib/constants';
 import { CapabilityGraphView } from './capability-graph/CapabilityGraphView';
+import { CertificationsView } from './capability-graph/CertificationsView';
 import { SegmentedToggle, type GraphTab } from './capability-graph/SegmentedToggle';
 
 // ─── Section ──────────────────────────────────────────────────────────────────
@@ -53,38 +54,50 @@ export function CapabilityGraphSection() {
           >
             <SectionHeader
               eyebrow="Engineering System"
-              title="Skills"
+              title={tab === 'graph' ? 'Skills' : 'Certifications'}
               headingId="skills-heading"
             />
             <div className="mt-3 flex items-start gap-2">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
               <p className="max-w-[13rem] text-[12.5px] leading-relaxed text-muted-foreground">
-                Hover or click any node to explore real project evidence and context.
+                {tab === 'graph'
+                  ? 'Hover or click any node to explore real project evidence and context.'
+                  : 'Milestones that validate my learning, skills and commitment to continuous growth.'}
               </p>
             </div>
           </motion.aside>
 
           {/* ── Graph canvas (~74%) ────────────────────────────────────── */}
           <motion.div
-            className="min-w-0 flex-1 lg:w-[74%]"
+            className="relative min-w-0 flex-1 lg:w-[74%]"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           >
-            {tab === 'graph' ? (
-              <CapabilityGraphView />
-            ) : (
-              /* Certifications placeholder — not implemented yet */
-              <div
-                className={cn(
-                  'flex h-[480px] w-full items-center justify-center rounded-2xl',
-                  'border border-dashed border-border text-muted-foreground',
-                )}
-              >
-                <p className="text-sm">Certifications coming soon</p>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              {tab === 'graph' ? (
+                <motion.div
+                  key="graph"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <CapabilityGraphView />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="certifications"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <CertificationsView />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
         </div>
