@@ -88,11 +88,10 @@ export function ProjectsSection() {
             whileInView="visible"
             viewport={{ once: true, margin: '-60px' }}
           >
-            {featuredProjects.map((project, i) => (
+            {featuredProjects.map((project) => (
               <ProjectShowcaseCard
                 key={project.id}
                 project={project}
-                index={i}
                 onOpenModal={handleOpenModal}
               />
             ))}

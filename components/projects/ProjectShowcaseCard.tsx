@@ -29,7 +29,6 @@ const cardVariantsReduced = {
 
 interface ProjectShowcaseCardProps {
   project: ProjectData;
-  index: number;
   onOpenModal: (project: ProjectData) => void;
 }
 
@@ -37,7 +36,6 @@ interface ProjectShowcaseCardProps {
 
 export function ProjectShowcaseCard({
   project,
-  index,
   onOpenModal,
 }: ProjectShowcaseCardProps) {
   const reduced = useReducedMotion();
@@ -118,50 +116,43 @@ export function ProjectShowcaseCard({
       onMouseLeave={handleMouseLeave}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      /* Subtle lift on hover */
+      /* Subtle lift on hover — no scale to avoid layout shift */
       animate={
         reduced
           ? {}
-          : { y: isHovered ? -4 : 0 }
+          : { y: isHovered ? -3 : 0 }
       }
       transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={cn(
-        'group relative flex flex-col lg:flex-row',
+        'group relative flex flex-col lg:flex-row lg:items-stretch',
         'w-full overflow-hidden rounded-2xl',
         'cursor-pointer select-none',
         'bg-[var(--surface)] border',
-        isHovered ? 'border-[var(--primary)]' : 'border-[var(--border)]',
+        isHovered ? 'border-[var(--primary)]/80' : 'border-[var(--border)]',
         /* shadow — light theme */
         'shadow-[0_2px_16px_-2px_rgba(121,84,101,0.10),0_1px_4px_rgba(30,27,24,0.04)]',
         isHovered &&
-          'shadow-[0_8px_40px_-4px_rgba(121,84,101,0.18),0_2px_12px_rgba(30,27,24,0.08)]',
+          'shadow-[0_8px_36px_-4px_rgba(121,84,101,0.18),0_3px_12px_rgba(30,27,24,0.07)]',
         /* shadow — dark theme */
         'dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5),0_1px_6px_rgba(0,0,0,0.3)]',
         isHovered &&
-          'dark:shadow-[0_8px_48px_-4px_rgba(139,92,246,0.22),0_2px_16px_rgba(0,0,0,0.5)]',
+          'dark:shadow-[0_8px_44px_-4px_rgba(139,92,246,0.24),0_0_0_1px_rgba(139,92,246,0.22),0_3px_16px_rgba(0,0,0,0.5)]',
         'transition-[border-color,box-shadow] duration-300 ease-out',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]',
       )}
     >
       {/* ── Media panel ───────────────────────────────────────────────────── */}
       {/*
-       * Sizing strategy: cover + center-top
-       *   `cover` fills the panel with no empty margins so the image feels
-       *   confident and editorial. `center top` anchors the crop to the top of
-       *   the screenshot where the most important UI chrome lives (headers,
-       *   nav bars, key metrics), letting the less critical lower portion crop
-       *   off naturally. This balances coverage vs. content visibility far
-       *   better than pure `contain` (too much empty space) or `center`
-       *   (crops the top navigation of many dashboards).
-       *
-       *   Video uses the same sizing rules so the image→video transition is
-       *   seamless with no layout shift.
+       * Sizing: cover + slight top bias (center 18 %) keeps dashboard chrome
+       * readable while avoiding harsh top/bottom crops. Video uses matching
+       * object-position for seamless image→video transition. Static-only cards
+       * gently zoom the image on hover (1.05×, clipped inside overflow-hidden).
        */}
       <div
         className={cn(
           'relative w-full overflow-hidden',
           'aspect-video',
-          'lg:aspect-auto lg:w-[40%] lg:flex-shrink-0',
+          'lg:aspect-auto lg:w-[40%] lg:flex-shrink-0 lg:self-stretch',
         )}
       >
         {/* Placeholder gradient — always underneath, visible if image fails */}
@@ -171,17 +162,26 @@ export function ProjectShowcaseCard({
           style={{ background: project.placeholderGradient }}
         />
 
-        {/* Cover image — cover + top anchor */}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${project.imagePath})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
+        {/* Cover image — zoom on hover when no video; clipped inside panel */}
+        <div aria-hidden className="absolute inset-0 overflow-hidden">
+          <div
+            className={cn(
+              'absolute inset-0 origin-center',
+              'transition-transform ease-out',
+              !reduced && 'duration-[650ms]',
+              !project.videoPath &&
+                isHovered &&
+                !reduced &&
+                'scale-[1.05]',
+            )}
+            style={{
+              backgroundImage: `url(${project.imagePath})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center 18%',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+        </div>
 
         {/* Video overlay — only rendered when videoPath exists */}
         {project.videoPath && (
@@ -190,7 +190,7 @@ export function ProjectShowcaseCard({
             aria-hidden
             className={cn(
               'absolute inset-0 h-full w-full',
-              'object-cover [object-position:center_top]',
+              'object-cover [object-position:center_18%]',
               'transition-opacity duration-500',
               videoReady && isHovered ? 'opacity-100' : 'opacity-0',
             )}
@@ -203,6 +203,16 @@ export function ProjectShowcaseCard({
             <source src={project.videoPath} type="video/mp4" />
           </video>
         )}
+
+        {/* Desktop edge fade — softens media-to-content transition */}
+        <div
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-8',
+            'bg-gradient-to-l from-[var(--surface)]/95 via-[var(--surface)]/40 to-transparent',
+            'lg:block',
+          )}
+        />
 
         {/* Bottom depth gradient — mobile only */}
         <div
@@ -235,34 +245,18 @@ export function ProjectShowcaseCard({
        *                  This avoids the cramped top-heavy feel of justify-between
        *                  while keeping the footer firmly grounded.
        */}
-      <div className="flex min-w-0 flex-1 p-7 lg:p-10">
+      <div className="flex min-w-0 flex-1 items-center p-6 lg:px-9 lg:py-7">
         <div className="flex w-full max-w-[680px] flex-col">
 
-          {/* ── Eyebrow: project index + category badge (desktop only) ──────── */}
-          {/*
-           * PROJECT 01 / AI PLATFORM stacked pair gives each card an
-           * editorial sequence number — signals curated, purposeful selection
-           * rather than a flat list of items.
-           */}
-          <div className="mb-5 hidden lg:block">
-            <p
-              className={cn(
-                'label-mono mb-1.5 text-[9px] font-semibold uppercase tracking-[0.22em]',
-                'text-[var(--foreground)] opacity-30',
-                'transition-opacity duration-200',
-                isHovered && 'opacity-45',
-              )}
-            >
-              PROJECT {String(index + 1).padStart(2, '0')}
-            </p>
+          {/* ── Category badge (desktop) ──────────────────────────────────── */}
+          <div className="mb-4 hidden lg:block">
             <span
               className={cn(
                 'label-mono inline-block rounded-full px-3 py-1',
                 'text-[10px] font-semibold uppercase tracking-[0.16em]',
                 'bg-[var(--accent-muted)] text-[var(--accent)]',
-                'border border-[var(--accent-soft)]/30',
-                'transition-transform duration-200',
-                isHovered ? '-translate-y-px' : '',
+                'border border-[var(--accent-soft)]/25',
+                'dark:text-[var(--accent)]/90',
               )}
             >
               {project.badge}
@@ -282,7 +276,7 @@ export function ProjectShowcaseCard({
             className={cn(
               'font-display font-semibold leading-tight tracking-tight',
               'text-[var(--foreground)]',
-              'mb-3',
+              'mb-2.5',
             )}
             style={{ fontSize: 'clamp(1.3rem, 2.1vw, 2.2rem)' }}
           >
@@ -290,12 +284,18 @@ export function ProjectShowcaseCard({
           </h3>
 
           {/* ── Description ────────────────────────────────────────────────── */}
-          <p className="text-sm leading-relaxed text-[var(--foreground-secondary)] lg:text-[0.9375rem]">
+          <p
+            className={cn(
+              'max-w-[88%] text-sm leading-relaxed lg:max-w-[700px] lg:text-[0.9375rem]',
+              'text-[var(--foreground-secondary)]',
+              'dark:text-[#b4b4bc]',
+            )}
+          >
             {project.description}
           </p>
 
           {/* ── Spacer — absorbs leftover height, grounds footer ────────────── */}
-          <div className="min-h-[28px] flex-1" aria-hidden />
+          <div className="min-h-[16px] flex-1" aria-hidden />
 
           {/* ── Tech stack chips ───────────────────────────────────────────── */}
           {/*
@@ -305,7 +305,7 @@ export function ProjectShowcaseCard({
            * the resting state recedes the chips to avoid competing with the title.
            */}
           <div
-            className="mb-5 flex flex-wrap gap-1.5"
+            className="mb-4 flex flex-wrap gap-1.5"
             role="list"
             aria-label={`Technologies used in ${project.title}`}
           >
@@ -317,9 +317,9 @@ export function ProjectShowcaseCard({
                   'label-mono rounded border px-2.5 py-1',
                   'text-[10px] font-medium',
                   'border-[var(--border)] bg-[var(--surface-raised)]',
-                  'text-[var(--foreground-secondary)]',
+                  'text-[var(--foreground-secondary)] dark:text-[#b0b0b8]',
                   'transition-opacity duration-200',
-                  isHovered ? 'opacity-100' : 'opacity-[0.72]',
+                  isHovered ? 'opacity-100' : 'opacity-[0.78] dark:opacity-[0.82]',
                 )}
               >
                 {t}
@@ -330,31 +330,45 @@ export function ProjectShowcaseCard({
           {/* ── Footer: metadata · CTA — hairline separator ─────────────────── */}
           <div
             className={cn(
-              'border-t pt-4',
+              'border-t pt-3.5',
               'transition-colors duration-300',
               isHovered ? 'border-[var(--border)]' : 'border-[var(--border-subtle)]',
             )}
           >
             <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-              <span className="label-mono text-[11px] text-[var(--muted-foreground)]">
+              <span className="label-mono text-[11px] text-[var(--muted-foreground)] dark:text-[#9a9aa3]">
                 {project.meta}
               </span>
 
               <span
                 className={cn(
-                  'inline-flex items-center text-[12px] font-medium',
-                  'text-[var(--primary)] transition-all duration-200',
-                  isHovered ? 'gap-2.5' : 'gap-1.5',
+                  'relative inline-flex items-center text-[12px] font-medium',
+                  'transition-[gap,color,opacity] duration-200 ease-out',
+                  isHovered
+                    ? 'gap-2.5 text-[var(--primary)] opacity-100 dark:brightness-110'
+                    : 'gap-1.5 text-[var(--primary)] opacity-90',
                 )}
                 aria-hidden
               >
-                View Case Study
+                <span className="relative">
+                  View Case Study
+                  <span
+                    aria-hidden
+                    className={cn(
+                      'absolute -bottom-px left-0 h-px bg-[var(--primary)]',
+                      'transition-[width,opacity] duration-200 ease-out',
+                      isHovered && !reduced
+                        ? 'w-full opacity-50'
+                        : 'w-0 opacity-0',
+                    )}
+                  />
+                </span>
                 <ArrowRight
                   size={13}
                   aria-hidden
                   className={cn(
-                    'transition-transform duration-200',
-                    isHovered ? 'translate-x-1' : '',
+                    'transition-transform duration-200 ease-out',
+                    isHovered && !reduced ? 'translate-x-1' : '',
                   )}
                 />
               </span>
