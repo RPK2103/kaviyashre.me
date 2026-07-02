@@ -13,7 +13,7 @@ export function SkillsGraphSection() {
 
         {/* ── Section header ──────────────────────────────────────────── */}
         <motion.div
-          className="mb-10 lg:mb-12"
+          className="mb-8 lg:mb-10"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
@@ -25,10 +25,6 @@ export function SkillsGraphSection() {
           <h2 className="text-2xl font-bold tracking-[-0.02em] text-foreground sm:text-3xl">
             The Skill Graph
           </h2>
-          <p className="mt-2 max-w-lg text-[14px] leading-relaxed text-foreground-secondary">
-            Each node connects to real evidence — projects shipped, technologies used, and the
-            context that shaped it. Hover or click any node to explore.
-          </p>
         </motion.div>
 
         {/* ── Graph canvas ─────────────────────────────────────────────── */}

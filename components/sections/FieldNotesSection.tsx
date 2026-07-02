@@ -117,7 +117,7 @@ export function FieldNotesSection() {
 
           {/* ── Section header ───────────────────────────────────────────── */}
           <motion.div
-            className="mb-14 max-w-2xl lg:mb-16"
+            className="mb-10 max-w-2xl lg:mb-12"
             variants={
               reduced
                 ? { hidden: { opacity: 0 }, visible: { opacity: 1 } }
@@ -129,8 +129,7 @@ export function FieldNotesSection() {
           >
             <SectionHeader
               eyebrow="Knowledge Layer"
-              title="Field notes."
-              subtitle="Short essays, build logs, and technical reflections on AI systems, backend platforms, cloud infrastructure, and product execution."
+              title="Field notes"
               headingId="field-notes-heading"
             />
           </motion.div>

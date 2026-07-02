@@ -107,7 +107,6 @@ export function ContactSection() {
                     <span className="italic text-primary">together.</span>
                   </>
                 }
-                subtitle="I'm currently open to AI engineering, backend engineering, cloud engineering, and forward deployed engineering opportunities where product thinking and reliable systems matter."
                 headingId="contact-heading"
                 className="mb-0"
               />

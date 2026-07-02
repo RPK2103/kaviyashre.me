@@ -517,7 +517,7 @@ export function ExperienceSection() {
       <Container>
         {/* ── Section header ─────────────────────────────────────────────── */}
         <motion.div
-          className="mb-14 max-w-xl lg:mb-16"
+          className="mb-10 max-w-xl lg:mb-12"
           variants={headerReveal}
           initial="hidden"
           whileInView="visible"
@@ -525,8 +525,7 @@ export function ExperienceSection() {
         >
           <SectionHeader
             eyebrow="Career System"
-            title="Experience."
-            subtitle="A timeline of engineering ownership, production systems, and applied AI growth."
+            title="Experience"
             headingId="experience-heading"
           />
         </motion.div>

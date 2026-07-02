@@ -107,8 +107,8 @@ export function ImageReveal({ alt, className }: ImageRevealProps) {
               src={PRIMARY_SRC}
               alt={alt}
               fill
-              sizes="(max-width: 1024px) 85vw, 420px"
-              className="object-cover"
+              sizes="420px"
+              className="scale-[1.05] object-cover object-center"
               onError={() => setPrimaryError(true)}
               priority={false}
             />
@@ -138,8 +138,8 @@ export function ImageReveal({ alt, className }: ImageRevealProps) {
                 src={REVEAL_SRC}
                 alt=""
                 fill
-                sizes="(max-width: 1024px) 85vw, 420px"
-                className="object-cover"
+                sizes="420px"
+                className="scale-[1.05] object-cover object-center"
                 onError={() => setRevealError(true)}
                 aria-hidden
               />

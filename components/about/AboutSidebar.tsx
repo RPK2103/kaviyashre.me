@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { aboutTabs, type AboutTabId } from '@/data/about';
 
@@ -14,13 +15,12 @@ export function AboutSidebar({ activeTab, onTabChange }: Props) {
       <ul
         role="tablist"
         aria-label="About sections"
-        /* Mobile: horizontal scrollable pills / Desktop: vertical nav list */
-        className="flex gap-1 overflow-x-auto pb-0.5 scrollbar-none lg:flex-col lg:gap-0.5 lg:overflow-x-visible lg:pb-0"
+        className="flex gap-1 overflow-x-auto pb-0.5 scrollbar-none lg:flex-col lg:gap-1 lg:overflow-x-visible lg:pb-0"
       >
         {aboutTabs.map((tab) => {
           const isActive = tab.id === activeTab;
           return (
-            <li key={tab.id} role="presentation">
+            <li key={tab.id} role="presentation" className="relative">
               <button
                 type="button"
                 id={`about-tab-${tab.id}`}
@@ -29,22 +29,26 @@ export function AboutSidebar({ activeTab, onTabChange }: Props) {
                 aria-controls={`about-panel-${tab.id}`}
                 onClick={() => onTabChange(tab.id)}
                 className={cn(
-                  'flex items-center font-mono text-left transition-all duration-200',
+                  'relative z-[1] flex w-full items-center font-mono text-left transition-colors duration-200',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
-
-                  /* Mobile: compact pill */
-                  'whitespace-nowrap rounded-md px-3 py-1.5 text-[12px]',
-
-                  /* Desktop: full-width row */
-                  'lg:w-full lg:rounded-md lg:px-3 lg:py-2 lg:text-[13px] lg:whitespace-normal',
-
+                  'whitespace-nowrap rounded-md px-3 py-2 text-[12px] lg:text-[13px] lg:whitespace-normal',
                   isActive
-                    ? 'bg-accent/15 text-accent font-medium dark:bg-accent/12'
-                    : 'text-muted-foreground hover:bg-black/[0.05] hover:text-foreground-secondary dark:hover:bg-white/[0.05]',
+                    ? 'text-accent font-medium'
+                    : 'text-muted-foreground hover:text-foreground-secondary',
                 )}
               >
+                <span className="mr-1.5 select-none text-muted-foreground/50">&gt;&gt;</span>
                 {tab.label}
               </button>
+
+              {isActive && (
+                <motion.div
+                  layoutId="about-sidebar-active"
+                  className="absolute inset-0 rounded-md bg-accent/15 dark:bg-accent/12"
+                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  aria-hidden
+                />
+              )}
             </li>
           );
         })}

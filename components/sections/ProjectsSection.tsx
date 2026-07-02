@@ -62,7 +62,7 @@ export function ProjectsSection() {
 
           {/* ── Section header ────────────────────────────────────────────── */}
           <motion.div
-            className="mb-14 max-w-2xl lg:mb-16"
+            className="mb-10 max-w-2xl lg:mb-12"
             variants={
               reduced
                 ? { hidden: { opacity: 0 }, visible: { opacity: 1 } }
@@ -75,7 +75,6 @@ export function ProjectsSection() {
             <SectionHeader
               eyebrow="Selected Builds"
               title="Projects"
-              subtitle="AI systems, backend platforms, cloud-native tools, and automation workflows — built with product thinking, engineering depth, and execution ownership."
               headingId="projects-heading"
             />
           </motion.div>

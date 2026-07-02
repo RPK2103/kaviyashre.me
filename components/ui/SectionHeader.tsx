@@ -6,8 +6,6 @@ export interface SectionHeaderProps {
   eyebrow: string;
   /** Main heading — string or JSX for line breaks / emphasis */
   title: ReactNode;
-  /** Optional supporting line below the heading */
-  subtitle?: string;
   /** `id` for aria-labelledby on parent sections */
   headingId?: string;
   className?: string;
@@ -29,14 +27,12 @@ const titleClasses = {
 } as const;
 
 /**
- * Shared section heading pattern:
- * eyebrow → title → optional subtitle.
+ * Shared section heading pattern: eyebrow → title.
  * Keeps visual rhythm consistent across homepage sections.
  */
 export function SectionHeader({
   eyebrow,
   title,
-  subtitle,
   headingId,
   className,
   align = 'left',
@@ -50,16 +46,6 @@ export function SectionHeader({
       <h2 id={headingId} className={titleClasses[size]}>
         {title}
       </h2>
-      {subtitle && (
-        <p
-          className={cn(
-            'mt-4 max-w-lg text-base leading-relaxed text-foreground-secondary',
-            align === 'center' && 'mx-auto',
-          )}
-        >
-          {subtitle}
-        </p>
-      )}
     </header>
   );
 }

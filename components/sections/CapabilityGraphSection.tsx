@@ -37,7 +37,7 @@ export function CapabilityGraphSection() {
       <Container className={cn('relative', SECTION_PY)}>
 
         {/* ── Segmented toggle ─────────────────────────────────────────── */}
-        <div className="mb-10 flex justify-center">
+        <div className="mb-8 flex justify-center">
           <SegmentedToggle value={tab} onChange={setTab} />
         </div>
 
@@ -57,14 +57,6 @@ export function CapabilityGraphSection() {
               title={tab === 'graph' ? 'Skills' : 'Certifications'}
               headingId="skills-heading"
             />
-            <div className="mt-3 flex items-start gap-2">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-              <p className="max-w-[13rem] text-[12.5px] leading-relaxed text-muted-foreground">
-                {tab === 'graph'
-                  ? 'Hover or click any node to explore real project evidence and context.'
-                  : 'Milestones that validate my learning, skills and commitment to continuous growth.'}
-              </p>
-            </div>
           </motion.aside>
 
           {/* ── Graph canvas (~74%) ────────────────────────────────────── */}

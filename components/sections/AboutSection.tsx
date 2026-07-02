@@ -12,7 +12,7 @@ import { SECTION_PY } from '@/lib/constants';
 import { type AboutTabId } from '@/data/about';
 
 export function AboutSection() {
-  const [activeTab, setActiveTab] = useState<AboutTabId>('whoami');
+  const [activeTab, setActiveTab] = useState<AboutTabId>('intro');
 
   return (
     <section id="about" aria-labelledby="about-heading" className="scroll-mt-20">
@@ -20,7 +20,7 @@ export function AboutSection() {
 
         {/* ── Section header ──────────────────────────────────────────── */}
         <motion.div
-          className="mb-10 lg:mb-12"
+          className="mb-8 lg:mb-10"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
@@ -28,7 +28,7 @@ export function AboutSection() {
         >
           <SectionHeader
             eyebrow="About"
-            title="The Operating System"
+            title="decoded: me"
             headingId="about-heading"
           />
         </motion.div>
@@ -84,7 +84,7 @@ export function AboutSection() {
               className={cn(
                 'shrink-0 bg-background-subtle',
                 'border-b border-black/[0.05] dark:border-white/[0.04]',
-                'lg:w-32 xl:w-36 lg:border-b-0 lg:border-r',
+                'lg:w-40 xl:w-44 lg:border-b-0 lg:border-r',
               )}
             >
               <div className="p-3 lg:px-3 lg:py-4">

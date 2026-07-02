@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import { ArrowRight, Download } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
@@ -38,14 +38,6 @@ export function HeroSection() {
             initial="hidden"
             animate="visible"
           >
-            {/* Eyebrow */}
-            <motion.p
-              variants={fadeInUp}
-              className="label-mono mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary"
-            >
-              Software Engineer
-            </motion.p>
-
             {/* Name headline */}
             <motion.h1
               variants={fadeInUp}
@@ -123,68 +115,91 @@ export function HeroSection() {
 }
 
 /*
- * Desktop: 280px image, inner halo at 308px, outer halo at 340px
- * Tablet:  260px image, inner halo at 286px, outer halo at 316px
- * Mobile:  220px image, inner halo at 244px, outer halo at 270px
+ * Desktop: 280px image + soft halo field
+ * Tablet:  260px image
+ * Mobile:  220px image
  */
 function ProfileImage() {
+  const reduced = useReducedMotion();
+
   return (
-    <div className="relative flex items-center justify-center">
+    <div
+      className="group relative flex h-[270px] w-[270px] items-center justify-center
+        sm:h-[316px] sm:w-[316px] lg:h-[340px] lg:w-[340px]"
+    >
+      {/* Atmospheric radial gradient */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-full opacity-75 transition-opacity duration-300 group-hover:opacity-100
+          bg-[radial-gradient(circle_at_50%_52%,color-mix(in_srgb,var(--color-accent-soft)_26%,transparent)_0%,color-mix(in_srgb,var(--color-accent)_10%,transparent)_40%,transparent_72%)]
+          dark:bg-[radial-gradient(circle_at_50%_52%,color-mix(in_srgb,#8b5cf6_20%,transparent)_0%,color-mix(in_srgb,#6366f1_10%,transparent)_42%,transparent_74%)]"
+      />
+
+      {/* Blurred glow layer */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl
+          h-[205px] w-[205px] opacity-55 transition-opacity duration-300 group-hover:opacity-80
+          sm:h-[245px] sm:w-[245px] lg:h-[265px] lg:w-[265px]
+          bg-[color-mix(in_srgb,var(--color-accent-soft)_32%,transparent)]
+          dark:bg-[color-mix(in_srgb,#7c3aed_24%,transparent)] dark:opacity-45 dark:group-hover:opacity-70"
+      />
+
       {/* Outer halo ring */}
       <div
         aria-hidden
-        className="absolute rounded-full border border-accent/18 dark:border-accent/8
-          h-[270px] w-[270px]
-          sm:h-[316px] sm:w-[316px]
-          lg:h-[340px] lg:w-[340px]"
+        className="pointer-events-none absolute rounded-full border border-accent/[0.06] transition-[border-color,opacity] duration-300
+          group-hover:border-accent/[0.10] dark:border-accent/[0.05] dark:group-hover:border-accent/[0.09]
+          h-[256px] w-[256px] sm:h-[300px] sm:w-[300px] lg:h-[320px] lg:w-[320px]"
       />
+
       {/* Inner halo ring */}
       <div
         aria-hidden
-        className="absolute rounded-full border border-accent/30 dark:border-accent/12
-          h-[244px] w-[244px]
-          sm:h-[286px] sm:w-[286px]
-          lg:h-[308px] lg:w-[308px]"
+        className="pointer-events-none absolute rounded-full border border-accent/[0.10] transition-[border-color] duration-300
+          group-hover:border-accent/[0.14] dark:border-accent/[0.08] dark:group-hover:border-accent/[0.12]
+          h-[246px] w-[246px] sm:h-[290px] sm:w-[290px] lg:h-[310px] lg:w-[310px]"
       />
 
-      {/* Soft glow */}
-      <div
-        aria-hidden
-        className="absolute rounded-full bg-accent/10 dark:bg-accent/5 blur-2xl
-          h-[200px] w-[200px]
-          sm:h-[240px] sm:w-[240px]
-          lg:h-[260px] lg:w-[260px]"
-      />
-
-      {/* Circular photo frame */}
-      <div
-        className="relative overflow-hidden rounded-full
-          ring-2 ring-accent/25 dark:ring-accent/15 ring-offset-4 ring-offset-background
-          h-[220px] w-[220px]
-          sm:h-[260px] sm:w-[260px]
-          lg:h-[280px] lg:w-[280px]"
+      <motion.div
+        className="relative will-change-transform"
+        animate={reduced ? undefined : { y: [0, -6, 0] }}
+        transition={
+          reduced
+            ? undefined
+            : { duration: 7, repeat: Infinity, ease: 'easeInOut' }
+        }
       >
-        {/* Gradient placeholder */}
-        <div
-          aria-hidden
-          className="absolute inset-0 flex items-end justify-center pb-6
-            bg-gradient-to-br from-accent-muted via-secondary-muted to-background-subtle"
+        <motion.div
+          className="relative overflow-hidden rounded-full
+            ring-1 ring-accent/18 ring-offset-2 ring-offset-background
+            transition-[box-shadow,ring-color] duration-300
+            group-hover:ring-accent/28 dark:ring-accent/10 dark:group-hover:ring-accent/16
+            h-[220px] w-[220px] sm:h-[260px] sm:w-[260px] lg:h-[280px] lg:w-[280px]"
+          whileHover={reduced ? undefined : { scale: 1.02 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
         >
-          <span className="select-none text-4xl font-bold tracking-tight text-foreground-secondary opacity-35">
-            KR
-          </span>
-        </div>
+          {/* Gradient placeholder */}
+          <div
+            aria-hidden
+            className="absolute inset-0 z-0 flex items-end justify-center pb-6
+              bg-gradient-to-br from-accent-muted via-secondary-muted to-background-subtle"
+          >
+            <span className="select-none text-4xl font-bold tracking-tight text-foreground-secondary opacity-35">
+              KR
+            </span>
+          </div>
 
-        {/* Profile photo — sits above gradient when present */}
-        <Image
-          src={profile.imageUrl}
-          alt={`${profile.name} — profile photo`}
-          fill
-          sizes="(max-width: 640px) 220px, (max-width: 1024px) 260px, 280px"
-          className="relative z-10 object-cover object-center"
-          priority
-        />
-      </div>
+          <Image
+            src={profile.imageUrl}
+            alt={`${profile.name} — profile photo`}
+            fill
+            sizes="(max-width: 640px) 220px, (max-width: 1024px) 260px, 280px"
+            className="z-10 scale-[1.08] object-cover object-[50%_42%]"
+            priority
+          />
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

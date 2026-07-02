@@ -39,7 +39,7 @@ export function BeyondSection() {
       className="scroll-mt-20 overflow-x-hidden bg-background"
     >
       {/* ── Section header ── */}
-      <Container className={cn(SECTION_PT, 'pb-10 lg:pb-14')}>
+      <Container className={cn(SECTION_PT, 'pb-8 lg:pb-10')}>
         <motion.div
           variants={fadeInUp}
           initial="hidden"
@@ -49,7 +49,6 @@ export function BeyondSection() {
           <SectionHeader
             eyebrow="Offline System"
             title="Beyond 9–5"
-            subtitle="The parts of me that keep the engineering brain alive outside work."
             headingId="beyond-heading"
           />
         </motion.div>

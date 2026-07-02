@@ -1,6 +1,6 @@
 // ─── Tab identifiers ───────────────────────────────────────────────────────────
 
-export type AboutTabId = 'whoami' | 'now';
+export type AboutTabId = 'intro' | 'current-track';
 
 export interface AboutTab {
   id: AboutTabId;
@@ -8,72 +8,125 @@ export interface AboutTab {
 }
 
 export const aboutTabs: AboutTab[] = [
-  { id: 'whoami', label: 'whoami' },
-  { id: 'now',    label: 'now'    },
+  { id: 'intro', label: 'intro.exe' },
+  { id: 'current-track', label: 'current.track' },
 ];
 
 export const PANEL_COMMANDS: Record<AboutTabId, string> = {
-  whoami: 'whoami',
-  now:    'now',
+  intro: 'intro.exe',
+  'current-track': 'current.track',
 };
 
-// ─── whoami ───────────────────────────────────────────────────────────────────
+// Alternative section heading options (reference only):
+// personal.log
+// human side of the system
+// not just the build logs
+// behind the interface
+// system notes
+// the person behind the product
+// readme: human
+// identity, but make it human
+// logs from a curious engineer
+// where the human shows up
 
-export interface WhoamiContent {
-  origin: string;
-  currentState: string;
-  curiosity: string;
-}
+// ─── intro.exe ────────────────────────────────────────────────────────────────
 
-export const whoamiData: WhoamiContent = {
-  origin:
-    'Started with computer science, grew into backend engineering, and slowly became fascinated by the space where AI, products, and user experience meet.',
-  currentState:
-    "Right now, I'm working as a Cloud & AI Engineer while building my own AI projects, experimenting with product ideas, and learning how great software is designed from both an engineering and user perspective.",
-  curiosity:
-    "I'm most drawn to messy ideas that can become useful products — the kind that solve real problems, feel simple to use, and still have strong systems underneath.",
-};
+export const introLines: readonly string[] = [
+  'Part engineer. Part problem-solver. Part curious human who enjoys building things that make life easier — and occasionally more fun.',
+  '',
+  'I like turning chaotic ideas into structured systems, shipping them, breaking them, fixing them, and learning something new in the process.',
+  '',
+  "When I'm not deep in code, I'm probably training for my next race, reading, or planning my next creative obsession.",
+  '',
+  'Always building. Always learning.',
+];
 
-// ─── now ──────────────────────────────────────────────────────────────────────
+// ─── current.track ────────────────────────────────────────────────────────────
 
-export interface NowCard {
+export interface CurrentTrackEntry {
   key: string;
-  values: readonly string[];
-  note: string;
+  value: string;
 }
 
-export const nowData: NowCard[] = [
+export const currentTrackData: CurrentTrackEntry[] = [
+  { key: 'reading', value: 'The Mom Test' },
+  { key: 'building', value: 'Portfolio OS, SignalForge, AI experiments' },
+  { key: 'learning', value: 'Agent architectures, system design, product thinking' },
+  { key: 'training_for', value: 'Half Marathon' },
+  { key: 'thinking_about', value: 'How AI changes software development' },
+  { key: 'side_quest', value: 'Trying not to redesign this portfolio every weekend' },
+];
+
+// ─── journey timeline ─────────────────────────────────────────────────────────
+
+export type JourneyIconId =
+  | 'graduation'
+  | 'rocket'
+  | 'bank'
+  | 'code'
+  | 'sparkles'
+  | 'globe';
+
+export interface JourneyMilestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  icon: JourneyIconId;
+  isPresent?: boolean;
+}
+
+export const journeyMilestones: JourneyMilestone[] = [
   {
-    key: 'currently_reading',
-    values: ['The Mom Test'],
-    note: 'Learning how to ask better questions and understand real user problems.',
+    id: 'first-commit',
+    year: '2019',
+    title: 'First Commit',
+    description:
+      'Started my computer science journey with curiosity, late nights, and a lot of debugging.',
+    icon: 'graduation',
   },
   {
-    key: 'building',
-    values: ['Portfolio OS', 'SignalForge', 'AI Experiments'],
-    note: 'Turning ideas into products instead of leaving them in Notion.',
+    id: 'first-internships',
+    year: '2021',
+    title: 'First Internships',
+    description:
+      'Explored the real world of tech, built small things, and learned big lessons.',
+    icon: 'rocket',
   },
   {
-    key: 'learning',
-    values: ['Agent Architectures', 'System Design', 'Product Thinking'],
-    note: 'Trying to connect engineering depth with product clarity.',
+    id: 'jpmc-intern',
+    year: 'May 2023',
+    title: 'JPMC Intern',
+    description:
+      'Dove into backend systems, worked on meaningful financial products, and learned how enterprise engineering works.',
+    icon: 'bank',
   },
   {
-    key: 'training_for',
-    values: ['Half Marathon'],
-    note: 'Building discipline outside code too.',
+    id: 'jpmc-se',
+    year: 'Jun 2023 – Aug 2025',
+    title: 'Software Engineer @ JPMC',
+    description:
+      'Owned, shipped, scaled, and learned what real production impact feels like.',
+    icon: 'code',
   },
   {
-    key: 'thinking_about',
-    values: [
-      'How AI changes software development.',
-      'How products become intuitive.',
-    ],
-    note: 'Mostly during walks, workouts, and late-night debugging.',
+    id: 'rapid-circle',
+    year: 'Mar 2026 – Present',
+    title: 'Cloud & AI Engineer @ Rapid Circle',
+    description:
+      'Building AI systems, automations, and internal platforms with purpose.',
+    icon: 'sparkles',
+    isPresent: true,
   },
   {
-    key: 'side_quest',
-    values: ['Trying not to redesign this portfolio every weekend.'],
-    note: 'Current success rate is questionable.',
+    id: 'whats-next',
+    year: 'Next →',
+    title: "What's Next?",
+    description:
+      "Forward deployed roles. Global impact. Building what's next.",
+    icon: 'globe',
   },
 ];
+
+export const journeyQuote =
+  "It's not about having it all figured out. It's about staying curious and building anyway.";
